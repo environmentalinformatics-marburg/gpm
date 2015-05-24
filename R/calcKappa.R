@@ -5,7 +5,7 @@
 #' classifications.
 #' 
 #' @param ctable contingency table (see function 
-#' \code{\link{comContingencyTable}})
+#' \code{\link{compConTab}})
 #'
 #' @return Matrix containing different kappa coefficients
 #'
