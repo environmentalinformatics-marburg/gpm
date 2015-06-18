@@ -31,7 +31,11 @@
 #' 
 sampleBy <- function(x, col, n = 1, seed = NULL, ...) {
   
-  s <- sp::split(x, x@data[, col], ...)
+  if(class(x) == "data.frame"){
+    s <- split(x, x[, col], ...)
+  } else {
+    s <- sp::split(x, x@data[, col], ...)
+  }
   
   indx <- unlist(lapply(seq(s), function(l) {
     if (nrow(s[[l]]) > n) {
@@ -44,7 +48,11 @@ sampleBy <- function(x, col, n = 1, seed = NULL, ...) {
     }
   }))
   
-  ind <- order(x@data[, col])
+  if(class(x) == "data.frame"){
+    ind <- order(x[, col])
+  } else {
+    ind <- order(x@data[, col])
+  }
   x <- x[ind, ]
   
   set <- x[indx, ]
