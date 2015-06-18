@@ -2,9 +2,10 @@
 
 export(calcKappa)
 export(compConTab)
-export(conditionalSample)
-export(meanOccupancy)
+export(conditionalSampleByVariable)
+export(minimumOccurence)
 export(sampleBy)
-export(splitByFrequency)
+export(splitMultResp)
+export(trainModel)
 import(raster)
 import(satellite)
