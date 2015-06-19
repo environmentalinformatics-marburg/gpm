@@ -1,3 +1,7 @@
+if ( !isGeneric("minimumOccurence") ) {
+  setGeneric("minimumOccurence", function(x, ...)
+    standardGeneric("minimumOccurence"))
+}
 #' Select features based on minimum occurence across unique locations
 #'
 #' @description
@@ -8,9 +12,8 @@
 #' 
 #' @param NONE
 #'
-#' @return Columnnames of the features occuring at least on n locations on 
-#' average.
-#'
+#' @name minimumOccurence
+#' 
 #' @export minimumOccurence
 #' 
 #' @details NONE
@@ -22,16 +25,41 @@
 #' @examples
 #' # Not run
 #' 
-minimumOccurence <- function(plot_ids, observations, resample = 100, thv = 20){
-  mo <- do.call("rbind", lapply(seq(resample), function(x){
-    act_smpl <- do.call("rbind", lapply(unique(plot_ids), function(y){
-      set.seed(y)
-      act_plot <- sample(which(plot_ids == y), size = 1)
-      data.frame(plot_ids = y,
-                 observations[act_plot, ])
-    }))
-    as.data.frame(t(colSums(act_smpl[, 2:ncol(act_smpl)])))
-  }))
-  mo_mean <- colMeans(mo)
-  return(names(mo_mean[mo_mean >= thv]))
-}
+NULL
+
+# Function using gpm object ----------------------------------------------
+#' 
+#' @return Columnnames of the features occuring at least on n locations on 
+#' average as part of the meta data section of the gpm object
+#' 
+#' @rdname minimumOccurence
+#'
+setMethod("minimumOccurence", 
+          signature(x = "GPM"), 
+          function(x, resample = 100, thv = 20){
+            return("TODO")
+          })
+
+
+# Function using data frame ----------------------------------------------------
+#' 
+#' @return Columnnames of the features occuring at least on n locations on 
+#' average.
+#' 
+#' @rdname minimumOccurence
+#'
+setMethod("minimumOccurence", 
+          signature(x = "data.frame"), 
+          function(x, selector, resample = 100, thv = 20){
+            mo <- do.call("rbind", lapply(seq(resample), function(i){
+              act_smpl <- do.call("rbind", lapply(unique(selector), function(j){
+                set.seed(j)
+                act_plot <- sample(which(selector == j), size = 1)
+                data.frame(selector = j,
+                           x[act_plot, ])
+              }))
+              as.data.frame(t(colSums(act_smpl[, 2:ncol(act_smpl)])))
+            }))
+            mo_mean <- colMeans(mo)
+            return(names(mo_mean[mo_mean >= thv]))
+          })

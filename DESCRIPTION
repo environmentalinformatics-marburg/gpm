@@ -12,11 +12,13 @@ Description:
 License: GPL-3
 Depends: 
     raster,
-    satellite
+    satellite,
+    caret
 Imports: 
     tools
 Suggests: 
     testthat,
     knitr
 Date: 2015-06-08
+LazyData: true
 VignetteBuilder: knitr
