@@ -44,6 +44,7 @@ setMethod("gpm",
               stop
             }
             data <- list(x)
+            names(data) <- meta$TYPE
             if(missing(log)){
               ps <- list(time = Sys.time(), info = "Initial import")
               log <- list(ps0001 = ps)

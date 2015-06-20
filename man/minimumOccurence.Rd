@@ -9,8 +9,8 @@
 \usage{
 \S4method{minimumOccurence}{GPM}(x, resample = 100, thv = 20)
 
-\S4method{minimumOccurence}{data.frame}(x, selector, resample = 100,
-  thv = 20)
+\S4method{minimumOccurence}{data.frame}(x, selector, occurence = "yes",
+  resample = 100, thv = 20)
 }
 \arguments{
 \item{NONE}{}

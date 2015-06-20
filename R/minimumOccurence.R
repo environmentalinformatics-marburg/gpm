@@ -27,6 +27,7 @@ if ( !isGeneric("minimumOccurence") ) {
 #' 
 NULL
 
+
 # Function using gpm object ----------------------------------------------
 #' 
 #' @return Columnnames of the features occuring at least on n locations on 
@@ -50,7 +51,7 @@ setMethod("minimumOccurence",
 #'
 setMethod("minimumOccurence", 
           signature(x = "data.frame"), 
-          function(x, selector, resample = 100, thv = 20){
+          function(x, selector, occurence = "yes", resample = 100, thv = 20){
             mo <- do.call("rbind", lapply(seq(resample), function(i){
               act_smpl <- do.call("rbind", lapply(unique(selector), function(j){
                 set.seed(j)
@@ -58,7 +59,7 @@ setMethod("minimumOccurence",
                 data.frame(selector = j,
                            x[act_plot, ])
               }))
-              as.data.frame(t(colSums(act_smpl[, 2:ncol(act_smpl)])))
+              as.data.frame(t(colSums(occurence == act_smpl[, 2:ncol(act_smpl)])))
             }))
             mo_mean <- colMeans(mo)
             return(names(mo_mean[mo_mean >= thv]))
