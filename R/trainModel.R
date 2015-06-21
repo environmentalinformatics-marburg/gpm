@@ -1,3 +1,7 @@
+if ( !isGeneric("trainModel") ) {
+  setGeneric("trainModel", function(x, ...)
+    standardGeneric("trainModel"))
+}
 #' Train machine learning model
 #'
 #' @description
@@ -7,6 +11,8 @@
 #'
 #' @return NONE
 #'
+#' @name trainModel
+#' 
 #' @export trainModel
 #' 
 #' @details NONE
@@ -18,55 +24,82 @@
 #' @examples
 #' # Not run
 #' 
-trainModel <- function(lodf, response_column, independent_columns,
-                       response_nbr = NULL, model_instc = NULL){
-  if(is.null(response_nbr)){
-    response_nbr <- seq(length(lodf))
-  }
-  response_instances <- lapply(response_nbr, function(x){
-    if(is.null(model_instc)){
-      model_instc <- seq(length(lodf[[x]]))
-    }
-    model_instances <- lapply(model_instc, function(y){
-      print(paste0("Computing model instance ", y, " of response instance ", x))
-      act <- lodf[[x]][[y]]
-      
-      resp <- act$training[, response_column]
-      indp <- act$training[, independent_columns]
-      act_test <- act$test
-      
-      set.seed(10)
-      cv_splits <- caret::createFolds(resp, k=5, returnTrain = TRUE)
-      
-      # thresholds=c(seq(0.0, 0.40, 0.02),seq(0.50,1,0.1))
-      # summaryFunction = "fourStats"
-      rfeCntrl <- caret::rfeControl(functions = caret::caretFuncs,
-                                    method="cv", index = cv_splits,
-                                    returnResamp = "all",
-                                    verbose = FALSE,
-                                    rerank=FALSE)
-      
-      trCntr <- caret::trainControl(method="cv", number = 5, 
-                                    repeats = 1, verbose = FALSE)
-      n_var <- seq(2, ncol(indp), 8)
-      
-      
-      # method = rf_thvs
-      # 
-      #   ctrl <- trainControl(index=cvSplits,
-      #                        method="cv",
-      #                        summaryFunction = eval(parse(text=summaryFunction)),
-      #                        classProbs = classProbs)
-      
-      rfe_model <- caret::rfe(indp, resp,
-                              metric = "Accuracy", method = "rf", 
-                              sizes = n_var,
-                              rfeControl = rfeCntrl,
-                              trControl = trCntr, verbose = FALSE,
-                              tuneGrid = expand.grid(mtry = n_var))
-      return(list(model = rfe_model, testdata = act_test))
-    })
-  })
-  return(response_instances)
-}
+NULL
+
+
+# Function using gpm object ----------------------------------------------------
+#' 
+#' @return Trained model for each sample.
+#' 
+#' @rdname trainModel
+#'
+setMethod("trainModel", 
+          signature(x = "GPM"), 
+          function(x, grabs = 1, resample = 100){
+            return("TODO")
+          })
+
+
+# Function using data frame ----------------------------------------------------
+#' 
+#' @return Trained model for each sample.
+#' 
+#' @rdname trainModel
+#'
+setMethod("trainModel", 
+          signature(x = "data.frame"),
+          trainModel <- function(x, response, independent, resamples,
+                                 response_nbr = NULL, resample_nbr = NULL){
+            if(is.null(response_nbr)){
+              response_nbr <- seq(length(response))
+            }
+            if(is.null(resample_nbr)){
+              resample_nbr <- seq(length(resamples))
+            }
+            response_instances <- lapply(response_nbr, function(i){
+              model_instances <- lapply(resample_nbr, function(j){
+                print(paste0("Computing resample instance ", j, 
+                             " of response instance ", i, "..."))
+                
+                act_resample <- resamples[[i]][[j]]
+                
+                resp <- x[act_resample$training$SAMPLES, 
+                          act_resample$training$RESPONSE]
+                indp <- x[act_resample$training$SAMPLES, independent]
+                
+                set.seed(10)
+                cv_splits <- caret::createFolds(resp, k=5, returnTrain = TRUE)
+                
+                rfeCntrl <- caret::rfeControl(functions = caret::caretFuncs,
+                                              method="cv", index = cv_splits,
+                                              returnResamp = "all",
+                                              verbose = FALSE,
+                                              rerank=FALSE)
+                
+                trCntr <- caret::trainControl(method="cv", number = 5, 
+                                              repeats = 1, verbose = FALSE)
+                n_var <- seq(2, ncol(indp), 8)
+                
+                
+                rfe_model <- caret::rfe(indp, resp,
+                                        metric = "Accuracy", method = "rf", 
+                                        sizes = n_var,
+                                        rfeControl = rfeCntrl,
+                                        trControl = trCntr, verbose = FALSE,
+                                        tuneGrid = expand.grid(mtry = n_var))
+                
+                test_resp <- x[act_resample$testing$SAMPLES, 
+                               act_resample$testing$RESPONSE]
+                test_indp <- x[act_resample$testing$SAMPLES, independent]
+                test_pred <- predict(rfe_model, test_indp)
+
+                testing <-  list(RESPONSE = test_resp, INDEPENDENT = test_indp,
+                                 PREDICTED = test_pred)
+                
+                return(list(response = act_resample$testing$RESPONSE, 
+                            model = rfe_model, testing = testing))
+              })
+            })
+            return(response_instances)
+          })
 

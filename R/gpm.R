@@ -45,9 +45,12 @@ setMethod("gpm",
             }
             data <- list(x)
             names(data) <- meta$TYPE
+            meta <- list(meta)
+            names(meta) <- names(data)
+            
             if(missing(log)){
               ps <- list(time = Sys.time(), info = "Initial import")
               log <- list(ps0001 = ps)
             }
-            return(new("GPM", data = data, meta = list(meta), log = log))
+            return(new("GPM", data = data, meta = meta, log = log))
           })
