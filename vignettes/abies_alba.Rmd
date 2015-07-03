@@ -9,18 +9,48 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+### Read and convert data set to class gpm
 ```{r, fig.show='hold'}
 data(abies_alba)
 
+abies_alba <- abies_alba[complete.cases(abies_alba),]
+
 meta <- createGPMMeta(dataset = abies_alba, 
-                      selector = 1, response = c(16:481), meta = c(2: 15))
+                      selector = 1, response = c(6:8), 
+                      independent = c(16:247), meta = c(2:5, 9:15))
 alb <- gpm(abies_alba, meta)
+```
 
 
 
+```{r, fig.show='hold'}
+# source("http://bioconductor.org/biocLite.R")
+# biocLite("impute")
+# library(impute)
 
 ```
 
+
+```{r, fig.show='hold'}
+alb_resamples <- resamplingsByVariable(x = alb@data$input, 
+                                       selector = alb@data$input$ID, 
+                                       resample = 5)
+
+
+alb_trte <- splitMultResp(x = alb@data$input, 
+                          response = alb@meta$input$RESPONSE,
+                          resamples = alb_resamples,
+                          p = 0.75)
+
+response <- alb@meta$input$RESPONSE
+independent <- alb@meta$input$INDEPENDENT
+
+models <- trainModel(x = alb@data$input, 
+                     response = response, independent = independent,
+                     resamples = alb_trte, n_var = seq(10,200,100),
+                     response_nbr = c(1), resample_nbr = c(2))
+
+```
 
 
 

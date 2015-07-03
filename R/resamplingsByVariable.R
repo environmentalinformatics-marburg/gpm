@@ -59,7 +59,7 @@ setMethod("resamplingsByVariable",
                 if(length(which(selector == j)) == 1){
                   act_sel <- which(selector == j)
                 } else {
-#                   set.seed(i)
+                  set.seed(i)
                   act_sel <- sample(c(which(selector == j)), size = grabs)
                 }
                 # x[act_sel, ]

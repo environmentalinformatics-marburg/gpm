@@ -49,7 +49,8 @@ setMethod("trainModel",
 setMethod("trainModel", 
           signature(x = "data.frame"),
           trainModel <- function(x, response, independent, resamples,
-                                 response_nbr = NULL, resample_nbr = NULL){
+                                 n_var = NULL, response_nbr = NULL, 
+                                 resample_nbr = NULL){
             if(is.null(response_nbr)){
               response_nbr <- seq(length(response))
             }
@@ -68,25 +69,34 @@ setMethod("trainModel",
                 indp <- x[act_resample$training$SAMPLES, independent]
                 
                 set.seed(10)
-                cv_splits <- caret::createFolds(resp, k=5, returnTrain = TRUE)
+                cv_splits <- caret::createFolds(resp, k=2, returnTrain = TRUE)
                 
-                rfeCntrl <- caret::rfeControl(functions = caret::caretFuncs,
+                rfeCntrl <- caret::rfeControl(functions = caret::rfFuncs,
                                               method="cv", index = cv_splits,
                                               returnResamp = "all",
                                               verbose = FALSE,
                                               rerank=FALSE)
                 
-                trCntr <- caret::trainControl(method="cv", number = 5, 
+                trCntr <- caret::trainControl(method="cv", number = 2, 
                                               repeats = 1, verbose = FALSE)
-                n_var <- seq(2, ncol(indp), 8)
+                if(is.null(n_var)){
+                  n_var_rfe <- seq(2, ncol(indp), 10)
+                } else {
+                  n_var_rfe <- n_var
+                }
                 
+                if(class(resp) == "factor"){
+                  metric = "Accuracy"
+                } else {
+                  metric = "RMSE"
+                }
                 
                 rfe_model <- caret::rfe(indp, resp,
-                                        metric = "Accuracy", method = "rf", 
-                                        sizes = n_var,
+                                        metric = metric, method = "rf", 
+                                        sizes = n_var_rfe,
                                         rfeControl = rfeCntrl,
                                         trControl = trCntr, verbose = FALSE,
-                                        tuneGrid = expand.grid(mtry = n_var))
+                                        tuneGrid = expand.grid(mtry = n_var_rfe))
                 
                 test_resp <- x[act_resample$testing$SAMPLES, 
                                act_resample$testing$RESPONSE]
