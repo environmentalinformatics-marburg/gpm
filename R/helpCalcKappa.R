@@ -5,11 +5,11 @@
 #' classifications.
 #' 
 #' @param ctable contingency table (see function 
-#' \code{\link{compConTab}})
+#' \code{\link{calcConTab}})
 #'
 #' @return Matrix containing different kappa coefficients
 #'
-#' @export calcKappa
+#' @export helpCalcKappa
 #' 
 #' @details The forumlas have been take from Kuhnert et al. (2005) and Pontius 
 #' and Millones (2011). Currently, the following coefficients are implemented:
@@ -40,9 +40,9 @@
 #' 
 #' @examples
 #' # Not run
-#' calcKappa(contab)
+#' helpCalcKappa(contab)
 #' 
-calcKappa <- function(ctable){
+helpCalcKappa <- function(ctable){
   ctable <- ctable  /  sum(ctable)
   categories <- nrow(ctable)
   

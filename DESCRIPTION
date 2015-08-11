@@ -11,9 +11,11 @@ Description:
     predictive modeling of raster and saetllite data.
 License: GPL-3
 Depends: 
+    caret,
+    gridExtra,
+    latticeExtra,
     raster,
     satellite,
-    caret
 Imports: 
     tools
 Suggests: 

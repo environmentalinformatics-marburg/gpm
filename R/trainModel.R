@@ -50,13 +50,16 @@ setMethod("trainModel",
           signature(x = "data.frame"),
           trainModel <- function(x, response, independent, resamples,
                                  n_var = NULL, response_nbr = NULL, 
-                                 resample_nbr = NULL){
+                                 resample_nbr = NULL, mthd = "rf"){
             if(is.null(response_nbr)){
               response_nbr <- seq(length(response))
             }
             if(is.null(resample_nbr)){
-              resample_nbr <- seq(length(resamples))
+              resample_nbr <- seq(length(resamples[[1]]))
             }
+            
+            lut$MTHD_DEF_LST[["rf"]]$fncs
+            
             response_instances <- lapply(response_nbr, function(i){
               model_instances <- lapply(resample_nbr, function(j){
                 print(paste0("Computing resample instance ", j, 
@@ -71,7 +74,7 @@ setMethod("trainModel",
                 set.seed(10)
                 cv_splits <- caret::createFolds(resp, k=2, returnTrain = TRUE)
                 
-                rfeCntrl <- caret::rfeControl(functions = caret::rfFuncs,
+                rfeCntrl <- caret::rfeControl(functions = lut$MTHD_DEF_LST[[mthd]]$fncs,
                                               method="cv", index = cv_splits,
                                               returnResamp = "all",
                                               verbose = FALSE,
@@ -92,11 +95,11 @@ setMethod("trainModel",
                 }
                 
                 rfe_model <- caret::rfe(indp, resp,
-                                        metric = metric, method = "rf", 
+                                        metric = metric, method = mthd, 
                                         sizes = n_var_rfe,
                                         rfeControl = rfeCntrl,
                                         trControl = trCntr, verbose = FALSE,
-                                        tuneGrid = expand.grid(mtry = n_var_rfe))
+                                        tuneGrid = lut$MTHD_DEF_LST[[mthd]]$tunegr)
                 
                 test_resp <- x[act_resample$testing$SAMPLES, 
                                act_resample$testing$RESPONSE]

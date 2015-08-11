@@ -10,7 +10,7 @@
 #'
 #' @return table containing contingency values
 #'
-#' @export compConTab
+#' @export helpCalcConTab
 #' 
 #' @details The predicted values from the raster dataset are extracted if they
 #' fall inside the individual polygons.
@@ -22,7 +22,7 @@
 #' # Not run
 #' calcKappa(contab)
 #' 
-compConTab <- function(pred, ref, ref_id){
+helpCalcConTab <- function(pred, ref, ref_id){
   pairs <- extract(pred, ref[grep(ref_id, names(ts))])
   valid <- lapply(seq(length(ref[grep(ref_id, names(ts))])), function(x) {
     dat <- data.frame(REFERENCE = ref@data[x, grep(ref_id, names(ts))], 
