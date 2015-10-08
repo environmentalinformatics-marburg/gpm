@@ -13,9 +13,11 @@ License: GPL-3
 Depends: 
     caret,
     gridExtra,
+    impute,
     latticeExtra,
     raster,
     satellite,
+    dplyr
 Imports: 
     tools
 Suggests: 

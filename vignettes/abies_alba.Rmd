@@ -11,13 +11,13 @@ vignette: >
 
 ### Read and convert data set to class gpm
 ```{r, fig.show='hold'}
-data(abies_alba)
+data(abies_alba_budburst)
 
-abies_alba <- abies_alba[complete.cases(abies_alba),]
+# abies_alba <- abies_alba[complete.cases(abies_alba),]
 
 meta <- createGPMMeta(dataset = abies_alba, 
-                      selector = 1, response = c(6:8), 
-                      independent = c(16:247), meta = c(2:5, 9:15))
+                      selector = 1, response = c(6:7), 
+                      independent = c(9:240), meta = c(2:5, 8:9))
 alb <- gpm(abies_alba, meta)
 ```
 
@@ -27,6 +27,9 @@ alb <- gpm(abies_alba, meta)
 # source("http://bioconductor.org/biocLite.R")
 # biocLite("impute")
 # library(impute)
+# or: rf.impute
+# 4 groups: cohort and two classes of elevation (<= 1000, > 1000)
+# auffüllen von contig...
 
 ```
 

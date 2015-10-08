@@ -38,42 +38,13 @@ getGPMDataLayers <- function(GPM){
 }
 
 
-# Return GMP data layer i ------------------------------------------------
-#' @export getGPMDataLayer
-#'
-#' @rdname gpmInfo
-#'
-getGPMDataLayer <- function(GPM, lcde){
-  return(GPM@data[[getGPMLNBR(GPM, lcde)]])
-}
-
-
 # Return GMP object metadata ---------------------------------------------
 #' @export getGPMMeta
 #'
 #' @rdname gpmInfo
 #'
-getGPMMeta <- function(GPM, lcde){
-  if(missing(lcde)){
+getGPMMeta <- function(GPM){
     return(GPM@meta)
-  } else {
-    return(GPM@meta[GPM@meta$lcde == lcde, ])
-  }
-}
-
-
-# Return template for GMP object metadata which is based on existing band-
-#' @export getGPMMetalcdeTemplate
-#'
-#' @rdname gpmInfo
-#'
-getGPMMetalcdeTemplate <- function(GPM, lcde){
-  meta_template <- getGPMMeta(GPM, lcde)
-  meta_template$DATE <- NULL
-  meta_template$LAYER <- NULL
-  meta_template$FILE <- NULL
-  meta_template$METAFILE <- NULL
-  return(meta_template)
 }
 
 
