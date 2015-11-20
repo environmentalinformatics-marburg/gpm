@@ -98,7 +98,7 @@ setMethod("trainModel",
                                         metric = metric, method = mthd, 
                                         sizes = n_var_rfe,
                                         rfeControl = rfeCntrl,
-                                        trControl = trCntr, verbose = FALSE,
+                                        trControl = trCntr, verbose = TRUE,
                                         tuneGrid = lut$MTHD_DEF_LST[[mthd]]$tunegr)
                 
                 test_resp <- x[act_resample$testing$SAMPLES, 

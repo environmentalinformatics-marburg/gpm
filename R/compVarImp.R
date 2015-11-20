@@ -32,6 +32,7 @@ compVarImp <- function(models){
     vi_count <- vi_species %>% count(VARIABLE)
     vi_mean <- vi_species %>% group_by(VARIABLE) %>% summarise(mean = mean(IMPORTANCE))
     vi <- merge(vi_count, vi_mean)
+    # vi$mean <- vi$freq * vi$mean
     vi$RESPONSE <- vi_species$RESPONSE[1]
     return(vi)
   })

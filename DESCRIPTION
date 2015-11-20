@@ -17,6 +17,7 @@ Depends:
     latticeExtra,
     raster,
     satellite,
+    plyr,
     dplyr
 Imports: 
     tools

@@ -11,7 +11,6 @@
 \alias{getGPMBandInfo}
 \alias{getGPMCalib}
 \alias{getGPMDATE}
-\alias{getGPMDataLayer}
 \alias{getGPMDataLayers}
 \alias{getGPMESD}
 \alias{getGPMESUN}
@@ -22,7 +21,6 @@
 \alias{getGPMLog}
 \alias{getGPMMeta}
 \alias{getGPMMetaLayer}
-\alias{getGPMMetalcdeTemplate}
 \alias{getGPMPRAD}
 \alias{getGPMParam}
 \alias{getGPMRADA}
@@ -56,11 +54,7 @@
 \usage{
 getGPMDataLayers(GPM)
 
-getGPMDataLayer(GPM, lcde)
-
-getGPMMeta(GPM, lcde)
-
-getGPMMetalcdeTemplate(GPM, lcde)
+getGPMMeta(GPM)
 
 getGPMLog(GPM)
 

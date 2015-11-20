@@ -55,11 +55,13 @@ setMethod("resamplingsByVariable",
           signature(x = "data.frame"), 
           function(x, selector, grabs = 1, resample = 100){
             smpl <- lapply(seq(resample), function(i){
+              nj = 0
               act_smpl <- do.call("rbind", lapply(unique(selector), function(j){
                 if(length(which(selector == j)) == 1){
                   act_sel <- which(selector == j)
                 } else {
-                  set.seed(i+j)
+                  nj <- nj + 1
+                  set.seed(i+nj)
                   act_sel <- sample(c(which(selector == j)), size = grabs)
                 }
                 return(act_sel)
