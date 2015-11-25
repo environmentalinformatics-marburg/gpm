@@ -57,7 +57,7 @@ setMethod("splitMultResp",
                 smpl <- caret::createDataPartition(x[j, i], p = 0.75, 
                                                    list = FALSE, times = 1)
                 training = list(SAMPLES = as.numeric(j[smpl]), RESPONSE = i)
-                testing = list(SAMPLES = -as.numeric(j[smpl]), RESPONSE = i)
+                testing = list(SAMPLES = as.numeric(j[-smpl]), RESPONSE = i)
                 # list(training = x[smpl, -response[-which(response %in% i)]], 
                 #      test = x[-smpl, -response[-which(response %in% i)]])
                 # x[training$SAMPLES, training$RESPONSE]
