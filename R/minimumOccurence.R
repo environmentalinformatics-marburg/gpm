@@ -1,4 +1,4 @@
-if ( !isGeneric("minimumOccurence") ) {
+ if ( !isGeneric("minimumOccurence") ) {
   setGeneric("minimumOccurence", function(x, ...)
     standardGeneric("minimumOccurence"))
 }
@@ -52,14 +52,23 @@ setMethod("minimumOccurence",
 setMethod("minimumOccurence", 
           signature(x = "data.frame"), 
           function(x, selector, occurence = "yes", resample = 100, thv = 20){
+            si <- 0
             mo <- do.call("rbind", lapply(seq(resample), function(i){
+              si <- si + 1
+              sj <- 0
               act_smpl <- do.call("rbind", lapply(unique(selector), function(j){
-                set.seed(i+j)
+                sj <- sj + 1
+                set.seed(si+sj)
                 act_plot <- sample(which(selector == j), size = 1)
                 data.frame(selector = j,
                            x[act_plot, ])
               }))
-              as.data.frame(t(colSums(occurence == act_smpl[, 2:ncol(act_smpl)])))
+              if(class(occurence) == "character"){
+                occ <- as.data.frame(t(colSums(occurence == act_smpl[, 2:ncol(act_smpl)], na.rm = TRUE)))  
+              } else{
+                occ <- as.data.frame(t(colSums(occurence < act_smpl[, 2:ncol(act_smpl)], na.rm = TRUE))) 
+              }
+              return(occ)
             }))
             mo_mean <- colMeans(mo)
             return(list(names = names(mo_mean[mo_mean >= thv]),
