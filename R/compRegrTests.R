@@ -25,10 +25,14 @@ compRegrTests <- function(models){
       
       # R2, RMSE
       
-      summary(lm(y$testing$PREDICTED ~ y$testing$RESPONSE))
+      smmry <- summary(lm(y$testing$PREDICTED ~ y$testing$RESPONSE))
+      #alz: y kommt aus compVarImp.R
+      #x <- models[[1]]
+      #y <- x[[1]]
+      R2 <- smmry$r.squared
       
-      data.frame(R2 = ...,
-                 RMSE = ...)
+      
+      data.frame(R2 = R2)
     })
     mod <- do.call("rbind", mod)
   })
