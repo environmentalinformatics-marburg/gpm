@@ -10,7 +10,8 @@
 \S4method{trainModel}{GPM}(x, grabs = 1, resample = 100)
 
 \S4method{trainModel}{data.frame}(x, response, independent, resamples,
-  n_var = NULL, response_nbr = NULL, resample_nbr = NULL, mthd = "rf")
+  n_var = NULL, response_nbr = NULL, resample_nbr = NULL, mthd = "rf",
+  seednbr = 11)
 }
 \arguments{
 \item{NONE}{}

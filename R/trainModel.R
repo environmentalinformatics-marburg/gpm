@@ -50,7 +50,8 @@ setMethod("trainModel",
           signature(x = "data.frame"),
           trainModel <- function(x, response, independent, resamples,
                                  n_var = NULL, response_nbr = NULL, 
-                                 resample_nbr = NULL, mthd = "rf"){
+                                 resample_nbr = NULL, mthd = "rf",
+                                 seed_nbr = 11, cv_nbr = 2){
             if(is.null(response_nbr)){
               response_nbr <- seq(length(response))
             }
@@ -71,8 +72,8 @@ setMethod("trainModel",
                           act_resample$training$RESPONSE]
                 indp <- x[act_resample$training$SAMPLES, independent]
                 
-                set.seed(10)
-                cv_splits <- caret::createFolds(resp, k=2, returnTrain = TRUE)
+                set.seed(seed_nbr)
+                cv_splits <- caret::createFolds(resp, k=cv_nbr, returnTrain = TRUE)
                 
                 rfeCntrl <- caret::rfeControl(functions = lut$MTHD_DEF_LST[[mthd]]$fncs,
                                               method="cv", index = cv_splits,
@@ -80,7 +81,7 @@ setMethod("trainModel",
                                               verbose = FALSE,
                                               rerank=FALSE)
                 
-                trCntr <- caret::trainControl(method="cv", number = 2, 
+                trCntr <- caret::trainControl(method="cv", number = cv_nbr, 
                                               repeats = 1, verbose = FALSE)
                 if(is.null(n_var)){
                   n_var_rfe <- seq(2, ncol(indp), 10)

@@ -26,6 +26,8 @@ compRegrTests <- function(models){
       # R2, RMSE
       
       smmry <- summary(lm(y$testing$PREDICTED ~ y$testing$RESPONSE))
+      
+      plot(y$testing$PREDICTED ~ y$testing$RESPONSE)
       #alz: y kommt aus compVarImp.R
       #x <- models[[1]]
       #y <- x[[1]]
