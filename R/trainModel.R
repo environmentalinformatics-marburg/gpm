@@ -59,7 +59,7 @@ setMethod("trainModel",
               resample_nbr <- seq(length(resamples[[1]]))
             }
             
-            lut$MTHD_DEF_LST[["rf"]]$fncs
+            lut$MTHD_DEF_LST[["rf"]]$fncs 
             
             response_instances <- lapply(response_nbr, function(i){
               model_instances <- lapply(resample_nbr, function(j){
@@ -89,10 +89,10 @@ setMethod("trainModel",
                   n_var_rfe <- n_var
                 }
                 
-                if(class(resp) == "factor"){
+                if(class(resp) == "factor"){ 
                   metric = "Accuracy"
                 } else {
-                  metric = "RMSE"
+                  metric = "RMSE"   ######################################################liegt hier das Problem der Genauigkeit im Ergebnis
                 }
                 
                 rfe_model <- caret::rfe(indp, resp,
