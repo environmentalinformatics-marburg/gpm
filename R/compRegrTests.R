@@ -20,15 +20,20 @@
 #' # Not run
 #' 
 compRegrTests <- function(models, avrg = TRUE){
-  lapply(models, function(x){
+  #lapply(models, function(x){
     if(avrg == TRUE){
       lst_models <- lapply(models, function(m){
         lst_per_predictor <- lapply(m, function(r){
           data.frame(model_response = r$response,
                      testing_response = r$testing$RESPONSE,
                      testing_predicted = as.numeric(r$testing$PREDICTED),
-                     smmry = summary(lm(r$testing$PREDICTED ~ 
-                                          r$testing$RESPONSE))$r.squared
+                     #r2: for each resample with about 4 values a r2 is 
+                     #calculated - those values are averaged
+                     #gives a far better r2 because it is easier to put a trend 
+                     #line in just a few points. => not the real r2 we are 
+                     #looking for
+                     r2_each_resample = summary(lm(r$testing$PREDICTED ~ 
+                                       r$testing$RESPONSE))$r.squared
                      
                      )
         })
@@ -42,30 +47,18 @@ compRegrTests <- function(models, avrg = TRUE){
       })
       lst_models <- do.call("rbind", lst_models)
       
-      
     } else {
       mod <- lapply(x, function(y){
         # R2, RMSE
         smmry <- summary(lm(y$testing$PREDICTED ~ y$testing$RESPONSE))
         plot(y$testing$PREDICTED ~ y$testing$RESPONSE)
-        #alz: y kommt aus compVarImp.R
-        #x <- models[[1]]
-        #y <- x[[1]]
         R2 <- smmry$r.squared
         data.frame(R2 = R2)
       })
       mod <- do.call("rbind", mod)
     }
-  })
+    #lst_models <- do.call("rbind", lst_models)
+  #})
 }
 
 
-ggplot(lst_models, aes(x = testing_response, y = testing_predicted, color = model_response)) +
-  geom_point()
-
-ggplot(lst_models[lst_models$model_response == "Acari",], aes(x = testing_response, y = testing_predicted, color = model_response)) +
-  geom_point()
-
-plot(testing_predicted ~ testing_response, lst_models[lst_models$model_response == "total_insct",])
-abline(lm(testing_predicted ~ testing_response, lst_models[lst_models$model_response == "total_insct",]))
-summary(lm(testing_predicted ~ testing_response, lst_models[lst_models$model_response == "total_insct",]))
