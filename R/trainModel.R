@@ -68,9 +68,9 @@ setMethod("trainModel",
                 
                 act_resample <- resamples[[i]][[j]]
                 
-                resp <- x[act_resample$training$SAMPLES, 
+                resp <- x@data$input[act_resample$training$SAMPLES, 
                           act_resample$training$RESPONSE]
-                indp <- x[act_resample$training$SAMPLES, independent]
+                indp <- x@data$input[act_resample$training$SAMPLES, independent]
                 
                 set.seed(seed_nbr)
                 cv_splits <- caret::createFolds(resp, k=cv_nbr, returnTrain = TRUE)
@@ -102,16 +102,28 @@ setMethod("trainModel",
                                         trControl = trCntr, verbose = TRUE,
                                         tuneGrid = lut$MTHD_DEF_LST[[mthd]]$tunegr)
                 
-                test_resp <- x[act_resample$testing$SAMPLES, 
+                train_selector <- x@data$input[act_resample$training$SAMPLES, 
+                                               x@meta$input$SELECTOR]
+                train_meta <- x@data$input[act_resample$training$SAMPLES, 
+                                           x@meta$input$META]
+                training <- list(RESPONSE = resp, INDEPENDENT = indp,
+                                 SELECTOR = train_selector, META = train_meta)
+                
+                test_resp <- x@data$input[act_resample$testing$SAMPLES, 
                                act_resample$testing$RESPONSE]
-                test_indp <- x[act_resample$testing$SAMPLES, independent]
+                test_indp <- x@data$input[act_resample$testing$SAMPLES, independent]
                 test_pred <- predict(rfe_model, test_indp)
-
+                test_selector <- x@data$input[act_resample$testing$SAMPLES, 
+                                               x@meta$input$SELECTOR]
+                test_meta <- x@data$input[act_resample$testing$SAMPLES, 
+                                           x@meta$input$META]
                 testing <-  list(RESPONSE = test_resp, INDEPENDENT = test_indp,
-                                 PREDICTED = test_pred)
+                                 PREDICTED = test_pred, 
+                                 SELECTOR = test_selector, META = test_meta)
                 
                 return(list(response = act_resample$testing$RESPONSE, 
-                            model = rfe_model, testing = testing))
+                            model = rfe_model, training = training,
+                            testing = testing))
               })
             })
             return(response_instances)
