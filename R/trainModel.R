@@ -51,7 +51,7 @@ setMethod("trainModel",
           trainModel <- function(x, response, independent, resamples,
                                  n_var = NULL, response_nbr = NULL, 
                                  resample_nbr = NULL, mthd = "rf",
-                                 seed_nbr = 11, cv_nbr = 2){
+                                 seed_nbr = 12, cv_nbr = 2){
             if(is.null(response_nbr)){
               response_nbr <- seq(length(response))
             }
