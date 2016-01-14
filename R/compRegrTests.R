@@ -60,6 +60,7 @@ compRegrTests <- function(models, per_model = TRUE, per_selector = FALSE,
                      model_selector = s,
                      testing_response = resp,
                      testing_predicted = pred,
+                     pairs = length(pred),
                      r_squared = smmry$r.squared,
                      adj_r_squared = smmry$adj.r.squared,
                      residuals = smmry$residuals)
