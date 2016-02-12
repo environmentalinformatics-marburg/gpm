@@ -92,7 +92,7 @@ setMethod("trainModel",
                 if(class(resp) == "factor"){ 
                   metric = "Accuracy"
                 } else {
-                  metric = "RMSE"   ######################################################liegt hier das Problem der Genauigkeit im Ergebnis
+                  metric = "RMSE"   
                 }
                 
                 rfe_model <- caret::rfe(indp, resp,

@@ -68,6 +68,7 @@ setMethod("minimumOccurence",
               } else{
                 occ <- as.data.frame(t(colSums(occurence < act_smpl[, 2:ncol(act_smpl)], na.rm = TRUE))) 
               }
+              #print(max(occ))
               return(occ)
             }))
             mo_mean <- colMeans(mo)
