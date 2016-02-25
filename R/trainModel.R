@@ -64,7 +64,7 @@ setMethod("trainModel",
             response_instances <- lapply(response_nbr, function(i){
               model_instances <- lapply(resample_nbr, function(j){
                 print(paste0("Computing resample instance ", j, 
-                             " of response instance ", i, "...neu"))
+                             " of response instance ", i, "..."))
                 
                 act_resample <- resamples[[i]][[j]]
                 
