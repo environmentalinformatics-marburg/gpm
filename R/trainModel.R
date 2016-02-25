@@ -64,7 +64,7 @@ setMethod("trainModel",
             response_instances <- lapply(response_nbr, function(i){
               model_instances <- lapply(resample_nbr, function(j){
                 print(paste0("Computing resample instance ", j, 
-                             " of response instance ", i, "..."))
+                             " of response instance ", i, "...neu"))
                 
                 act_resample <- resamples[[i]][[j]]
                 
@@ -92,7 +92,8 @@ setMethod("trainModel",
                 if(class(resp) == "factor"){ 
                   metric = "Accuracy"
                 } else {
-                  metric = "RMSE"   
+                  #metric = "RMSE"
+                  metric = "Rsquared"
                 }
                 
                 rfe_model <- caret::rfe(indp, resp,
