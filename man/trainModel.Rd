@@ -11,7 +11,7 @@
 
 \S4method{trainModel}{data.frame}(x, response, independent, resamples,
   n_var = NULL, response_nbr = NULL, resample_nbr = NULL, mthd = "rf",
-  seednbr = 11)
+  seed_nbr = 11, cv_nbr = 2)
 }
 \arguments{
 \item{NONE}{}

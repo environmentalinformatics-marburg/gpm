@@ -4,7 +4,8 @@
 \alias{compRegrTests}
 \title{Compute regression tests over all model responses}
 \usage{
-compRegrTests(models)
+compRegrTests(models, per_model = TRUE, per_selector = FALSE,
+  sub_selectors = NULL, details = TRUE)
 }
 \arguments{
 \item{NONE}{}
