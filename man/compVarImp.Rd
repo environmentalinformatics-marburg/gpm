@@ -4,7 +4,7 @@
 \alias{compVarImp}
 \title{Compute variable importance over all model responses and resamplings}
 \usage{
-compVarImp(models)
+compVarImp(models, scale = FALSE)
 }
 \arguments{
 \item{NONE}{}

@@ -87,12 +87,13 @@ helpCalcKappa <- function(ctable){
   # allocation disagreement:
   all_dagrm <- 100*(pmax - pagrm)
   
-  kappa_comp <- c("Kappa" = kappa, "Kappa of location" = kappa_loc, 
-                  "Kappa of histogram" = kappa_hist, 
-                  "Chance agreement" = chance_agrm, 
-                  "Quantity agreement" = quant_agrm,
-                  "Quantity disagreement" = quant_dagrm,
-                  "Allocation agreement" = all_agrm, 
-                  "Allocation disagreement" = all_dagrm)  
+  kappa_comp <- c("Kappa" = kappa, 
+                  "Kappa_location" = kappa_loc, 
+                  "Kappa_histogram" = kappa_hist, 
+                  "Kappa_change_agreement" = chance_agrm, 
+                  "Kappa_quantity_agreement" = quant_agrm,
+                  "Kappa_quantity_disagreement" = quant_dagrm,
+                  "Kappa_allocation_agreement" = all_agrm, 
+                  "Kappa_allocation_disagreement" = all_dagrm)  
   return (kappa_comp)
 }

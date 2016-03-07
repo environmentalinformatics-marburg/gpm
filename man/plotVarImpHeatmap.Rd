@@ -4,7 +4,8 @@
 \alias{plotVarImpHeatmap}
 \title{Plot mean variable importance over all model responses as heatmap}
 \usage{
-plotVarImpHeatmap(var_imp, xlab = "Variable", ylab = "Method")
+plotVarImpHeatmap(var_imp, xlab = "Variable", ylab = "Method",
+  vis_range = "minmax")
 }
 \arguments{
 \item{NONE}{}

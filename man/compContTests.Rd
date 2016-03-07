@@ -4,7 +4,7 @@
 \alias{compContTests}
 \title{Compute contingency tests over all model responses}
 \usage{
-compContTests(models)
+compContTests(models, mean = FALSE)
 }
 \arguments{
 \item{NONE}{}

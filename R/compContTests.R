@@ -19,12 +19,12 @@
 #' @examples
 #' # Not run
 #' 
-compContTests <- function(models, mean = FALSE){
+compContTests <- function(models, mean = TRUE){
   cont_test <- lapply(models, function(x){
     act_cont_test <- lapply(x, function(y){
       cont_table <- ftable(y$testing$PREDICTED[,1], 
                            y$testing$RESPONSE)
-      
+      n <- length(y$testing$RESPONSE)
       corneg <- cont_table[1,1]
       misses <- cont_table[1,2]
       falarm <- cont_table[2,1]
@@ -50,6 +50,9 @@ compContTests <- function(models, mean = FALSE){
       
       hk <- hits / (hits + misses) - falarm / (falarm + corneg)
       
+      expct_corr <- 1/n * ((hits + misses) * (hits + falarm) + (corneg + misses) * (corneg + falarm))
+      hss <- (hits + corneg - expct_corr) / (n - expct_corr)
+      
       or <- hits * corneg / (misses * falarm)
       
       orss = (hits * corneg - misses * falarm) / 
@@ -57,9 +60,9 @@ compContTests <- function(models, mean = FALSE){
       
       kappa <- helpCalcKappa(cont_table)
       
-      cbind(data.frame(RESPONSE = y$response,
-                       ACCURACY = accuracy,
-                       BIAS = bias,
+      cbind(data.frame(Response = y$response,
+                       Accuracy = accuracy,
+                       Bias = bias,
                        POD = pod,
                        FAR = far,
                        POFD = pofd,
@@ -67,6 +70,7 @@ compContTests <- function(models, mean = FALSE){
                        TS = ts,
                        ETS = ets,
                        HK = hk,
+                       HSS = hss,
                        OR = or,
                        ORSS = orss), data.frame(t(kappa)))
     })
@@ -74,26 +78,28 @@ compContTests <- function(models, mean = FALSE){
   })
   
   if(mean == TRUE){
-    cont_test <- lapply(cont_test, function(x){
-      data.frame(RESPONSE = x$RESPONSE[1], 
-                 KAPPA_MEAN = mean(x$Kappa, na.rm = TRUE),
-                 KAPPA_LOCATION_MEAN = mean(x$Kappa.of.location, na.rm = TRUE),
-                 KAPPA_HISTOGRAM_MEAN = mean(x$Kappa.of.histogram, na.rm = TRUE),
-                 KAPPA_CHANCE_AGRM_MEAN = mean(x$Chance.agreement, na.rm = TRUE),
-                 KAPPA_QUANTITY_AGRM_MEAN = mean(x$Quantity.agreement, na.rm = TRUE),
-                 KAPPA_QUANTITY_DISAGRM_MEAN = mean(x$Quantity.disagreement, na.rm = TRUE),
-                 KAPPA_ALLOCATION_AGRM_MEAN = mean(x$Allocation.agreement, na.rm = TRUE),
-                 KAPPA_ALLOCATION_DISAGRM_MEAN = mean(x$Allocation.disagreement, na.rm = TRUE),
-                 POD_MEAN = mean(x$POD, na.rm = TRUE),
-                 FAR_MEAN = mean(x$FAR, na.rm = TRUE), 
-                 POFD_MEAN = mean(x$POFD, na.rm = TRUE),
-                 ACCURACY_MEAN = mean(x$ACCURACY, na.rm = TRUE),
-                 SR_MEAN = mean(x$SR, na.rm = TRUE),
-                 TS_MEAN = mean(x$TS, na.rm = TRUE),
-                 ETS_MEAN = mean(x$ETS, na.rm = TRUE),
-                 HK_MEAN = mean(x$HK, na.rm = TRUE))
+    cont_test_mean <- lapply(cont_test, function(x){
+      data.frame(Response = x$Response[1], 
+                 Kappa_mean = mean(x$Kappa, na.rm = TRUE),
+                 Kappa_location_mean = mean(x$Kappa_location, na.rm = TRUE),
+                 Kappa_histogram_mean = mean(x$Kappa_histogram, na.rm = TRUE),
+                 Kappa_change_agreement_mean = mean(x$Kappa_change_agreement, na.rm = TRUE),
+                 Kappa_quantity_agreement_mean = mean(x$Kappa_quantity_agreement, na.rm = TRUE),
+                 Kappa_quantity_disagreement_mean = mean(x$Kappa_quantity_disagreement, na.rm = TRUE),
+                 Kappa_allocation_agreement_mean = mean(x$Kappa_allocation_agreement, na.rm = TRUE),
+                 Kappa_allocation_disagreement_mean = mean(x$Kappa_allocation_disagreement, na.rm = TRUE),
+                 Bias_mean = mean(x$Bias, na.rm = TRUE),
+                 POD_mean = mean(x$POD, na.rm = TRUE),
+                 FAR_mean = mean(x$FAR, na.rm = TRUE), 
+                 POFD_mean = mean(x$POFD, na.rm = TRUE),
+                 Accuracy_mean = mean(x$Accuracy, na.rm = TRUE),
+                 SR_mean = mean(x$SR, na.rm = TRUE),
+                 TS_mean = mean(x$TS, na.rm = TRUE),
+                 ETS_mean = mean(x$ETS, na.rm = TRUE),
+                 HK_mean = mean(x$HK, na.rm = TRUE),
+                 HSS_mean = mean(x$HSS, na.rm = TRUE))
     })
-    cont_test <- do.call("rbind", cont_test)
+    cont_test <- list(do.call("rbind", cont_test_mean), cont_test)
   }
   return(cont_test)
 }
