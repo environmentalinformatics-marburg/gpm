@@ -21,7 +21,7 @@
 compVarImp <- function(models, scale = FALSE){
   lapply(models, function(x){
     vi_species <- lapply(x, function(y){
-      vi <- varImp(y$model$fit, scale = FALSE)
+      vi <- varImp(y$model$fit, scale = FALSE)   #war: var_Imp(y$model$fit, scale = FALSE)
       if(scale == TRUE){
         vi <- vi / max(vi)
       }
