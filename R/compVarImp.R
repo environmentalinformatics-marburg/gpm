@@ -20,7 +20,7 @@
 #'
 compVarImp <- function(models, scale = FALSE){
   lapply(models, function(x){
-    vi_species <- lapply(x, function(y){
+    vi_species1 <- lapply(x, function(y){
       # vi <- varImp(y$model$fit, scale = FALSE)   #war: var_Imp(y$model$fit, scale = FALSE)
       vi <- y$model$fit$importance
       if(scale == TRUE){
@@ -38,8 +38,9 @@ compVarImp <- function(models, scale = FALSE){
                        VARIABLE = variables,
                        IMPORTANCE = as.data.frame(vi)[,1])
     })
-    n <- length(vi_species)
-    vi_species <- do.call("rbind", vi_species)
+    
+    n <- length(vi_species1)
+    vi_species <- do.call("rbind", vi_species1)
     vi_count <- vi_species %>% count(VARIABLE)
     vi_mean <- vi_species %>% group_by(VARIABLE) %>% summarise(mean = mean(IMPORTANCE))
     vi <- merge(vi_count, vi_mean)
