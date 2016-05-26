@@ -4,8 +4,7 @@
 \alias{plotClassPerformance}
 \title{Plot performance of a classification model}
 \usage{
-plotClassPerformance(model_stat, scores = c("KAPPA_MEAN", "TS_MEAN",
-  "ETS_MEAN", "HK_MEAN"))
+plotClassPerformance(modstat, mean = FALSE, scores = c("Kappa", "ETS"))
 }
 \arguments{
 \item{NONE}{}

@@ -49,9 +49,11 @@ setMethod("trainModel",
 setMethod("trainModel", 
           signature(x = "data.frame"),
           trainModel <- function(x, response, independent, resamples,
+                                 mode = c("rfe", "ffs"),
                                  n_var = NULL, response_nbr = NULL, 
                                  resample_nbr = NULL, mthd = "rf",
                                  seed_nbr = 11, cv_nbr = 2){
+            mode <- mode[1]
             if(is.null(response_nbr)){
               response_nbr <- seq(length(response))
             }
@@ -72,37 +74,18 @@ setMethod("trainModel",
                           act_resample$training$RESPONSE]
                 indp <- x@data$input[act_resample$training$SAMPLES, independent]
                 
-                set.seed(seed_nbr)
-                cv_splits <- caret::createFolds(resp, k=cv_nbr, returnTrain = TRUE)
                 
-                rfeCntrl <- caret::rfeControl(functions = lut$MTHD_DEF_LST[[mthd]]$fncs,
-                                              method="cv", index = cv_splits,
-                                              returnResamp = "all",
-                                              verbose = FALSE,
-                                              rerank=FALSE)
-                
-                trCntr <- caret::trainControl(method="cv", number = cv_nbr, 
-                                              repeats = 1, verbose = FALSE)
-                if(is.null(n_var)){
-                  n_var_rfe <- seq(2, ncol(indp), 10)
-                } else {
-                  n_var_rfe <- n_var
+                if(mode == "rfe"){
+                  model <- trainModelrfe(resp = resp, indp = indp, n_var = n_var, 
+                                         mthd = mthd, seed_nbr = seed_nbr, 
+                                         cv_nbr = cv_nbr)
+                } else if (mode == "ffs"){
+                  model <- trainModelffs(resp = resp, indp = indp, n_var = n_var, 
+                                         mthd = mthd, seed_nbr = seed_nbr, 
+                                         cv_nbr = cv_nbr, withinSD = TRUE, 
+                                         runParallel = TRUE)
                 }
-                
-                if(class(resp) == "factor"){ 
-                  metric = "Accuracy"
-                } else {
-                  #metric = "RMSE"
-                  metric = "Rsquared"
-                }
-                
-                rfe_model <- caret::rfe(indp, resp,
-                                        metric = metric, method = mthd, 
-                                        sizes = n_var_rfe,
-                                        rfeControl = rfeCntrl,
-                                        trControl = trCntr, verbose = TRUE,
-                                        tuneGrid = lut$MTHD_DEF_LST[[mthd]]$tunegr)
-                
+
                 train_selector <- x@data$input[act_resample$training$SAMPLES, 
                                                x@meta$input$SELECTOR]
                 train_meta <- x@data$input[act_resample$training$SAMPLES, 
@@ -113,7 +96,7 @@ setMethod("trainModel",
                 test_resp <- x@data$input[act_resample$testing$SAMPLES, 
                                act_resample$testing$RESPONSE]
                 test_indp <- x@data$input[act_resample$testing$SAMPLES, independent]
-                test_pred <- predict(rfe_model, test_indp)
+                test_pred <- predict(model, test_indp)
                 test_selector <- x@data$input[act_resample$testing$SAMPLES, 
                                                x@meta$input$SELECTOR]
                 test_meta <- x@data$input[act_resample$testing$SAMPLES, 
@@ -123,7 +106,7 @@ setMethod("trainModel",
                                  SELECTOR = test_selector, META = test_meta)
                 
                 return(list(response = act_resample$testing$RESPONSE, 
-                            model = rfe_model, training = training,
+                            model = model, training = training,
                             testing = testing))
               })
             })
