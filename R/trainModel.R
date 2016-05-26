@@ -61,8 +61,6 @@ setMethod("trainModel",
               resample_nbr <- seq(length(resamples[[1]]))
             }
             
-            lut$MTHD_DEF_LST[["rf"]]$fncs 
-            
             response_instances <- lapply(response_nbr, function(i){
               model_instances <- lapply(resample_nbr, function(j){
                 print(paste0("Computing resample instance ", j, 
