@@ -52,7 +52,8 @@ setMethod("trainModel",
                                  mode = c("rfe", "ffs"),
                                  n_var = NULL, response_nbr = NULL, 
                                  resample_nbr = NULL, mthd = "rf",
-                                 seed_nbr = 11, cv_nbr = 2){
+                                 seed_nbr = 11, cv_nbr = 2,
+                                 filepath_tmp = NULL){
             mode <- mode[1]
             if(is.null(response_nbr)){
               response_nbr <- seq(length(response))
@@ -69,45 +70,52 @@ setMethod("trainModel",
                 act_resample <- resamples[[i]][[j]]
                 
                 resp <- x@data$input[act_resample$training$SAMPLES, 
-                          act_resample$training$RESPONSE]
+                                     act_resample$training$RESPONSE]
                 indp <- x@data$input[act_resample$training$SAMPLES, independent]
                 
                 
                 if(mode == "rfe"){
-                  model <- trainModelrfe(resp = resp, indp = indp, n_var = n_var, 
-                                         mthd = mthd, seed_nbr = seed_nbr, 
-                                         cv_nbr = cv_nbr)
+                  model <- try(trainModelrfe(resp = resp, indp = indp, n_var = n_var, 
+                                             mthd = mthd, seed_nbr = seed_nbr, 
+                                             cv_nbr = cv_nbr))
                 } else if (mode == "ffs"){
-                  model <- trainModelffs(resp = resp, indp = indp, n_var = n_var, 
-                                         mthd = mthd, seed_nbr = seed_nbr, 
-                                         cv_nbr = cv_nbr, withinSD = TRUE, 
-                                         runParallel = TRUE)
-                }
-
-                train_selector <- x@data$input[act_resample$training$SAMPLES, 
-                                               x@meta$input$SELECTOR]
-                train_meta <- x@data$input[act_resample$training$SAMPLES, 
-                                           x@meta$input$META]
-                training <- list(RESPONSE = resp, INDEPENDENT = indp,
-                                 SELECTOR = train_selector, META = train_meta)
-                
-                test_resp <- x@data$input[act_resample$testing$SAMPLES, 
-                               act_resample$testing$RESPONSE]
-                test_indp <- x@data$input[act_resample$testing$SAMPLES, independent]
-                test_pred <- predict(model, test_indp)
-                test_selector <- x@data$input[act_resample$testing$SAMPLES, 
-                                               x@meta$input$SELECTOR]
-                test_meta <- x@data$input[act_resample$testing$SAMPLES, 
-                                           x@meta$input$META]
-                testing <-  list(RESPONSE = test_resp, INDEPENDENT = test_indp,
-                                 PREDICTED = test_pred, 
-                                 SELECTOR = test_selector, META = test_meta)
-                
-                return(list(response = act_resample$testing$RESPONSE, 
-                            model = model, training = training,
-                            testing = testing))
-              })
+                  model <- try(trainModelffs(resp = resp, indp = indp, n_var = n_var, 
+                                             mthd = mthd, seed_nbr = seed_nbr, 
+                                             cv_nbr = cv_nbr, withinSD = TRUE, 
+                                             runParallel = TRUE))
+              }
+              
+              train_selector <- x@data$input[act_resample$training$SAMPLES, 
+                                             x@meta$input$SELECTOR]
+              train_meta <- x@data$input[act_resample$training$SAMPLES, 
+                                         x@meta$input$META]
+              training <- list(RESPONSE = resp, INDEPENDENT = indp,
+                               SELECTOR = train_selector, META = train_meta)
+              
+              test_resp <- x@data$input[act_resample$testing$SAMPLES, 
+                                        act_resample$testing$RESPONSE]
+              test_indp <- x@data$input[act_resample$testing$SAMPLES, independent]
+              test_pred <- predict(model, test_indp)
+              test_selector <- x@data$input[act_resample$testing$SAMPLES, 
+                                            x@meta$input$SELECTOR]
+              test_meta <- x@data$input[act_resample$testing$SAMPLES, 
+                                        x@meta$input$META]
+              testing <-  list(RESPONSE = test_resp, INDEPENDENT = test_indp,
+                               PREDICTED = test_pred, 
+                               SELECTOR = test_selector, META = test_meta)
+              
+              return(list(response = act_resample$testing$RESPONSE, 
+                          model = model, training = training,
+                          testing = testing))
             })
-            return(response_instances)
+              if(!is.null(filepath_tmp)){
+                save(model_instances, 
+                     file = 
+                       paste0(filepath_tmp, 
+                              sprintf("gpm_trainModel_model_instances_%03d", i),
+                              ".RData"))              
+              }
           })
+            return(response_instances)
+            })
 
