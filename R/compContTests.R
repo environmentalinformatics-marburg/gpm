@@ -22,57 +22,61 @@
 compContTests <- function(models, mean = TRUE){
   cont_test <- lapply(models, function(x){
     act_cont_test <- lapply(x, function(y){
-      cont_table <- ftable(y$testing$PREDICTED[,1], 
-                           y$testing$RESPONSE)
-      n <- length(y$testing$RESPONSE)
-      corneg <- cont_table[1,1]
-      misses <- cont_table[1,2]
-      falarm <- cont_table[2,1]
-      hits <- cont_table[2,2]
-      total <- sum(cont_table)
-      
-      accuracy <- (hits + corneg) / total
-      
-      bias <- (hits + falarm) / (hits + misses)
-      
-      pod <- hits / (hits + misses)
-      
-      far <- falarm / (hits + falarm)
-      
-      pofd <- falarm / (corneg + falarm)
-      
-      sr <- hits / (hits + falarm)
-      
-      ts <-  hits / (hits + misses + falarm)
-      
-      hits_r <- (hits + misses) * (hits + falarm) / total
-      ets <- (hits - hits_r) / (hits + misses + falarm + hits_r)
-      
-      hk <- hits / (hits + misses) - falarm / (falarm + corneg)
-      
-      expct_corr <- 1/n * ((hits + misses) * (hits + falarm) + (corneg + misses) * (corneg + falarm))
-      hss <- (hits + corneg - expct_corr) / (n - expct_corr)
-      
-      or <- hits * corneg / (misses * falarm)
-      
-      orss = (hits * corneg - misses * falarm) / 
-        (hits * corneg + misses * falarm)
-      
-      kappa <- helpCalcKappa(cont_table)
-      
-      cbind(data.frame(Response = y$response,
-                       Accuracy = accuracy,
-                       Bias = bias,
-                       POD = pod,
-                       FAR = far,
-                       POFD = pofd,
-                       SR = sr,
-                       TS = ts,
-                       ETS = ets,
-                       HK = hk,
-                       HSS = hss,
-                       OR = or,
-                       ORSS = orss), data.frame(t(kappa)))
+      if(inherits(y$model, "try-error")){
+        NULL
+      } else {
+        cont_table <- ftable(y$testing$PREDICTED[,1], 
+                             y$testing$RESPONSE)
+        n <- length(y$testing$RESPONSE)
+        corneg <- cont_table[1,1]
+        misses <- cont_table[1,2]
+        falarm <- cont_table[2,1]
+        hits <- cont_table[2,2]
+        total <- sum(cont_table)
+        
+        accuracy <- (hits + corneg) / total
+        
+        bias <- (hits + falarm) / (hits + misses)
+        
+        pod <- hits / (hits + misses)
+        
+        far <- falarm / (hits + falarm)
+        
+        pofd <- falarm / (corneg + falarm)
+        
+        sr <- hits / (hits + falarm)
+        
+        ts <-  hits / (hits + misses + falarm)
+        
+        hits_r <- (hits + misses) * (hits + falarm) / total
+        ets <- (hits - hits_r) / (hits + misses + falarm + hits_r)
+        
+        hk <- hits / (hits + misses) - falarm / (falarm + corneg)
+        
+        expct_corr <- 1/n * ((hits + misses) * (hits + falarm) + (corneg + misses) * (corneg + falarm))
+        hss <- (hits + corneg - expct_corr) / (n - expct_corr)
+        
+        or <- hits * corneg / (misses * falarm)
+        
+        orss = (hits * corneg - misses * falarm) / 
+          (hits * corneg + misses * falarm)
+        
+        kappa <- helpCalcKappa(cont_table)
+        
+        cbind(data.frame(Response = y$response,
+                         Accuracy = accuracy,
+                         Bias = bias,
+                         POD = pod,
+                         FAR = far,
+                         POFD = pofd,
+                         SR = sr,
+                         TS = ts,
+                         ETS = ets,
+                         HK = hk,
+                         HSS = hss,
+                         OR = or,
+                         ORSS = orss), data.frame(t(kappa)))
+      }
     })
     act_cont_test <- do.call("rbind", act_cont_test)
   })

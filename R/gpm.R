@@ -38,15 +38,23 @@ NULL
 #' 
 setMethod("gpm", 
           signature(x = "data.frame"), 
-          function(x, meta, log){
+          function(x, meta, log, scale = FALSE, maxnew = 1, minnew = 0){
             if(missing(meta)){
               print("Please provide meta information")
               stop
+            }
+            if(scale == TRUE){
+              for(i in meta$INDEPENDENT){
+                a = (maxnew - minnew)/(max(x[,i], na.rm = TRUE) - min(x[,i], na.rm = TRUE))
+                b <- maxnew - a * max(x[,i], na.rm = TRUE)
+                x[,i] <- a * x[,i] + b
+              }
             }
             data <- list(x)
             names(data) <- meta$TYPE
             meta <- list(meta)
             names(meta) <- names(data)
+            
             
             if(missing(log)){
               ps <- list(time = Sys.time(), info = "Initial import")

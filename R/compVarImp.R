@@ -22,38 +22,40 @@ compVarImp <- function(models, scale = FALSE){
   lapply(models, function(x){
     vi_species1 <- lapply(x, function(y){
       # vi <- varImp(y$model$fit, scale = FALSE)   #war: var_Imp(y$model$fit, scale = FALSE)
-      
-      if("finalModel" %in% names(models[[1]][[1]]$model)){
-        vi <- y$model$finalModel$importance
-        if(scale == TRUE){
-          vi <- vi / max(vi)
-        }
-        if(length(rownames(vi)) == 1){
-          variables <- predictors(y$model$finalModel)
-        } else {
-          variables <- rownames(vi)
-        }
+      if(inherits(y$model, "try-error")){
+        NULL
       } else {
-        vi <- y$model$fit$importance
-        if(scale == TRUE){
-          vi <- vi / max(vi)
-        }
-        if(length(rownames(vi)) == 1){
-          variables <- predictors(y$model$fit)
+        if("finalModel" %in% names(models[[1]][[1]]$model)){
+          vi <- y$model$finalModel$importance
+          if(scale == TRUE){
+            vi <- vi / max(vi)
+          }
+          if(length(rownames(vi)) == 1){
+            variables <- predictors(y$model$finalModel)
+          } else {
+            variables <- rownames(vi)
+          }
         } else {
-          variables <- rownames(vi)
+          vi <- y$model$fit$importance
+          if(scale == TRUE){
+            vi <- vi / max(vi)
+          }
+          if(length(rownames(vi)) == 1){
+            variables <- predictors(y$model$fit)
+          } else {
+            variables <- rownames(vi)
+          }
         }
+        #       vi <- data.frame(RESPONSE = y$response,
+        #                        VARIABLE = variables,
+        #                        IMPORTANCE = vi$Overall)
+        vi <- data.frame(RESPONSE = y$response,
+                         VARIABLE = variables,
+                         IMPORTANCE = as.data.frame(vi)[,1])
       }
-      
-#       vi <- data.frame(RESPONSE = y$response,
-#                        VARIABLE = variables,
-#                        IMPORTANCE = vi$Overall)
-      vi <- data.frame(RESPONSE = y$response,
-                       VARIABLE = variables,
-                       IMPORTANCE = as.data.frame(vi)[,1])
     })
     
-    n <- length(vi_species1)
+    # n <- length(vi_species1)
     vi_species <- do.call("rbind", vi_species1)
     # max_imp <- max(vi_species$IMPORTANCE)
     # vi_species$IMPORTANCE <- vi_species$IMPORTANCE / max_imp
