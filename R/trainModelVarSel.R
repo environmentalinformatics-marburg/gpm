@@ -79,7 +79,12 @@ trainModelVarSelSD <- function (model, metric = model$metric, maximize=FALSE,
     bestVar[i]=sum(subset$Overall[subset$var==uniqueVars[i]])/10
   }
   names(bestVar) <- uniqueVars
-  bestVar<-sort(bestVar,decreasing=TRUE)[1:n_vars]
+  
+  if(is.na(names(bestVar))){
+    bestVar<-model$optVariables
+  } else {
+    bestVar<-sort(bestVar,decreasing=TRUE)[1:n_vars]
+  }
   
   #bestVar <- model$control$functions$selectVar(model$variables, n_vars)
   #return(model$optVariables[1:n_vars])

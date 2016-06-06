@@ -95,8 +95,9 @@ setMethod("trainModel",
                                                                metric = model$metric, 
                                                                maximize=FALSE,
                                                                sderror=TRUE)
-                    independent_best <- as.character(names(independent_best))
-                    
+                    if(class(independent_best) != "character"){
+                      independent_best <- as.character(names(independent_best))
+                    }
                     cv_splits <- caret::createFolds(resp, k=cv_nbr, returnTrain = TRUE)
                     
                     trCntr <- caret::trainControl(method="cv", number = cv_nbr, 
