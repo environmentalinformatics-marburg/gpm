@@ -11,7 +11,8 @@
 
 \S4method{trainModel}{data.frame}(x, response, independent, resamples,
   mode = c("rfe", "ffs"), n_var = NULL, response_nbr = NULL,
-  resample_nbr = NULL, mthd = "rf", seed_nbr = 11, cv_nbr = 2)
+  resample_nbr = NULL, mthd = "rf", seed_nbr = 11, cv_nbr = 2,
+  var_selection = c("sd", "indv"), filepath_tmp = NULL)
 }
 \arguments{
 \item{NONE}{}

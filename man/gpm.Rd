@@ -6,7 +6,8 @@
 \alias{gpm,data.frame-method}
 \title{Create a gpm object}
 \usage{
-\S4method{gpm}{data.frame}(x, meta, log)
+\S4method{gpm}{data.frame}(x, meta, log, scale = FALSE, maxnew = 1,
+  minnew = 0)
 }
 \arguments{
 \item{x}{a data frame}

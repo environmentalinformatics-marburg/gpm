@@ -4,10 +4,12 @@
 \alias{trainModelffs}
 \title{Train machine learning model using forward feature selection}
 \usage{
-trainModelffs(resp, indp, n_var, mthd, seed_nbr, cv_nbr, withinSD = TRUE,
-  runParallel = TRUE)
+trainModelffs(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric,
+  withinSD = TRUE, runParallel = TRUE)
 }
 \arguments{
+\item{metric}{see \code{\link{train}}}
+
 \item{withinSD}{Logical Models are only selected if they are better than the 
 currently best models SD}
 
@@ -18,8 +20,6 @@ currently best models SD}
 \item{response}{see \code{\link{train}}}
 
 \item{method}{see \code{\link{train}}}
-
-\item{metric}{see \code{\link{train}}}
 
 \item{maximize}{see \code{\link{train}}}
 

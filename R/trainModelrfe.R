@@ -23,7 +23,7 @@
 #' 
 #' @rdname trainModelrfe
 #'
-trainModelrfe <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr){
+trainModelrfe <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric){
   set.seed(seed_nbr)
   cv_splits <- caret::createFolds(resp, k=cv_nbr, returnTrain = TRUE)
   
@@ -39,13 +39,6 @@ trainModelrfe <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr){
     n_var_rfe <- seq(2, ncol(indp), 10)
   } else {
     n_var_rfe <- n_var
-  }
-  
-  if(class(resp) == "factor"){ 
-    metric = "Accuracy"
-  } else {
-    #metric = "RMSE"
-    metric = "Rsquared"
   }
   
   rfe_model <- caret::rfe(indp, resp,

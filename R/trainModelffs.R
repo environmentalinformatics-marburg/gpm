@@ -53,7 +53,7 @@
 #' 
 #' @rdname trainModelffs
 #'
-trainModelffs <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, 
+trainModelffs <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric,
                           withinSD = TRUE, runParallel = TRUE){
 
   if(is.null(n_var)){
@@ -62,13 +62,10 @@ trainModelffs <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr,
     n_var_rfe <- n_var
   }
   
-  if(class(resp) == "factor"){ 
-    metric = "Accuracy"
+  if (metric=="Rsquared"||metric=="ROC"||metric=="Accuracy"){
     maximize = TRUE
     evalfunc <- function(x){max(x,na.rm=T)}
   } else {
-    metric = "RMSE"
-    # metric = "Rsquared"
     maximize = FALSE
     evalfunc <- function(x){min(x,na.rm=T)}
   }
