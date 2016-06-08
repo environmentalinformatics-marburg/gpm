@@ -27,7 +27,7 @@ plotClassPerformance <- function(modstat, mean = FALSE,
   
   df_mean$Response <- factor(
     df_mean$Response,
-    levels(df_mean$Response)[order(
+    levels = df_mean$Response[order(
       df_mean$Kappa_mean, decreasing = FALSE)])
   
   df_mean_melt <- melt(df_mean, id.vars = "Response")
