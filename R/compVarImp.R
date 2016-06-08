@@ -25,7 +25,7 @@ compVarImp <- function(models, scale = FALSE){
       if(inherits(y$model, "try-error")){
         NULL
       } else {
-        if("finalModel" %in% names(models[[1]][[1]]$model)){
+        if("finalModel" %in% names(y$model)){
           vi <- y$model$finalModel$importance
           if(scale == TRUE){
             vi <- vi / max(vi)
