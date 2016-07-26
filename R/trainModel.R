@@ -138,7 +138,9 @@ setMethod("trainModel",
                   
                   if(class(model) == "train"){
                     test_pred <- data.frame(pred = predict(model, test_indp, type = "raw"))
-                    test_pred <- cbind(test_pred, predict(model, test_indp, type = "prob"))
+                    if(lut$MTHD_DEF_LST[[mthd]]$type == "prob"){
+                      test_pred <- cbind(test_pred, predict(model, test_indp, type = "prob"))
+                    }
                   } else {
                     test_pred <- predict(model, test_indp)
                   }

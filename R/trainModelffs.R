@@ -57,9 +57,9 @@ trainModelffs <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric,
                           withinSD = TRUE, runParallel = TRUE){
 
   if(is.null(n_var)){
-    n_var_rfe <- seq(2, ncol(indp), 10)
+    n_var_ffe <- seq(2, ncol(indp), 10)
   } else {
-    n_var_rfe <- n_var
+    n_var_ffe <- n_var
   }
   
   if (metric=="Rsquared"||metric=="ROC"||metric=="Accuracy"){
@@ -102,14 +102,16 @@ trainModelffs <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric,
   twogrid <- t(data.frame(combn(names(indp),2)))
   for (i in seq(nrow(twogrid))){
     set.seed(seed_nbr)
-    model <- train(indp[,twogrid[i,]],
+    model <- try(train(indp[,twogrid[i,]],
                    resp,
                    method=mthd,
                    trControl=trCntr,
-                   # tuneLength = tuneLength,
-                   tuneGrid = lut$MTHD_DEF_LST[[mthd]]$tunegr)
+                   tuneGrid = lut$MTHD_DEF_LST[[mthd]]$tunegr))
     
     ### compare the model with the currently best model
+    if(inherits(model, "try-error")){
+      NULL
+    } else {
     actmodelperf <- evalfunc(model$results[,names(model$results)==metric])
     if(withinSD){
       actmodelperfSD <- model$results[,names(model$results)==paste0(metric,"SD")][
@@ -130,6 +132,7 @@ trainModelffs <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric,
         bestmodel <- model
       }
     }
+    }
     acc <- acc+1
     print(paste0("maxmimum number of models that still need to be trained: ",
                  (((n-1)^2)+n-1)/2 + (((n-2)^2)+n-2)/2 - acc))
@@ -137,7 +140,7 @@ trainModelffs <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric,
   
   #### increase the number of predictors by one (try all combinations) 
   #and test if model performance increases
-  for (k in 1:(length(names(indp))-2)){
+  for (k in seq(length(names(indp))-2)){
     startvars <- names(bestmodel$trainingData)[-which(
       names(bestmodel$trainingData)==".outcome")]
     nextvars <- names(indp)[-which(
@@ -148,14 +151,18 @@ trainModelffs <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric,
       return(bestmodel)
       break()
     }
-    for (i in 1:length(nextvars)){
+    for (i in seq(length(nextvars))){
       set.seed(seed_nbr)
-      model <- train(indp[,c(startvars,nextvars[i])],
+      model <- try(train(indp[,c(startvars,nextvars[i])],
                      resp,
                      method = mthd,
                      trControl = trCntr,
                      # tuneLength = tuneLength,
-                     tuneGrid = lut$MTHD_DEF_LST[[mthd]]$tunegr)
+                     tuneGrid = lut$MTHD_DEF_LST[[mthd]]$tunegr))
+      
+      if(inherits(model, "try-error")){
+        NULL
+      } else {
       actmodelperf <- evalfunc(model$results[,names(model$results)==metric])
       if(withinSD){
         actmodelperfSD <- model$results[,names(model$results)==paste0(metric,"SD")][
@@ -168,6 +175,7 @@ trainModelffs <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric,
           bestmodelperfSD <- actmodelperfSD
         }
         bestmodel <- model
+      }
       }
       acc <- acc+1
       print(paste0("maxmimum number of models that still need to be trained: ",

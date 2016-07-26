@@ -51,21 +51,32 @@ setMethod("splitMultResp",
 #'
 setMethod("splitMultResp", 
           signature(x = "data.frame"),
-          function(x, response, resamples, p = 0.75){
-            fs <- lapply(response, function(i){
-              idv <- lapply(resamples, function(j){
-                smpl <- caret::createDataPartition(x[j, i], p = 0.75, 
-                                                   list = FALSE, times = 1)
-                training = list(SAMPLES = as.numeric(j[smpl]), RESPONSE = i)
-                testing = list(SAMPLES = as.numeric(j[-smpl]), RESPONSE = i)
-                # list(training = x[smpl, -response[-which(response %in% i)]], 
-                #      test = x[-smpl, -response[-which(response %in% i)]])
-                # x[training$SAMPLES, training$RESPONSE]
-                # x[testing$SAMPLES, testing$RESPONSE]
-                # list(training = x[smpl, -response[-which(response %in% i)]], 
-                #     test = x[-smpl, -response[-which(response %in% i)]])
-                list(training = training, testing = testing)
+          function(x, response, resamples, p = 0.75, selector = NULL){
+            if(is.null(selector)){
+              fs <- lapply(response, function(i){
+                idv <- lapply(resamples, function(j){
+                  smpl <- caret::createDataPartition(x[j, i], p = 0.75, 
+                                                     list = FALSE, times = 1)
+                  training = list(SAMPLES = as.numeric(j[smpl]), RESPONSE = i)
+                  testing = list(SAMPLES = as.numeric(j[-smpl]), RESPONSE = i)
+                  # list(training = x[smpl, -response[-which(response %in% i)]], 
+                  #      test = x[-smpl, -response[-which(response %in% i)]])
+                  # x[training$SAMPLES, training$RESPONSE]
+                  # x[testing$SAMPLES, testing$RESPONSE]
+                  # list(training = x[smpl, -response[-which(response %in% i)]], 
+                  #     test = x[-smpl, -response[-which(response %in% i)]])
+                  list(training = training, testing = testing)
+                })
               })
-            })
+            } else {
+              fs <- lapply(response, function(i){
+                idv <- lapply(resamples, function(j){
+                  smpl <- which(x[,selector] == unique(x[,selector])[1])
+                  training = list(SAMPLES = as.numeric(j[smpl]), RESPONSE = i)
+                  testing = list(SAMPLES = as.numeric(j[-smpl]), RESPONSE = i)
+                  list(training = training, testing = testing)
+                })
+              })
+            }
             return(fs)
           })
