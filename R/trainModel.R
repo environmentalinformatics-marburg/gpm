@@ -138,9 +138,13 @@ setMethod("trainModel",
                   
                   if(class(model) == "train"){
                     test_pred <- data.frame(pred = predict(model, test_indp, type = "raw"))
-                    if(lut$MTHD_DEF_LST[[mthd]]$type == "prob"){
-                      test_pred <- cbind(test_pred, predict(model, test_indp, type = "prob"))
-                    }
+                    if(class(resp) == "factor"){
+                        test_pred <- cbind(test_pred, predict(model, test_indp, type = "prob"))
+                      }
+                    
+                    # if(lut$MTHD_DEF_LST[[mthd]]$type == "prob"){
+                    #   test_pred <- cbind(test_pred, predict(model, test_indp, type = "prob"))
+                    # }
                   } else {
                     test_pred <- predict(model, test_indp)
                   }
@@ -153,10 +157,17 @@ setMethod("trainModel",
                                    PREDICTED = test_pred, 
                                    SELECTOR = test_selector, META = test_meta)
                 }
-
-                return(list(response = act_resample$testing$RESPONSE, 
-                            model = model, training = training,
-                            testing = testing))
+                model_instances <- list(response = act_resample$testing$RESPONSE, 
+                                        model = model, training = training,
+                                        testing = testing)
+                if(!is.null(filepath_tmp)){
+                  save(model_instances, 
+                       file = 
+                         paste0(filepath_tmp, 
+                                sprintf("gpm_trainModel_model_instances_%03d_%03d", i, j),
+                                ".RData"))              
+                }
+                return(model_instances)
               })
               if(!is.null(filepath_tmp)){
                 save(model_instances, 

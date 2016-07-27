@@ -9,7 +9,8 @@
 \usage{
 \S4method{splitMultResp}{GPM}(x, grabs = 1, resample = 100)
 
-\S4method{splitMultResp}{data.frame}(x, response, resamples, p = 0.75)
+\S4method{splitMultResp}{data.frame}(x, response, resamples, p = 0.75,
+  selector = NULL)
 }
 \arguments{
 \item{NONE}{}
