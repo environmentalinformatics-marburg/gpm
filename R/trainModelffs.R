@@ -81,13 +81,7 @@ trainModelffs <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric,
     }
   }
 
-  if(runParallel){
-    require(doParallel)
-    cl <- makeCluster(detectCores()-1)
-    registerDoParallel(cl)
-  }
 
-  
   trCntr <- caret::trainControl(method="cv", number = cv_nbr, 
                                 returnResamp="all", savePredictions = TRUE,
                                 repeats = 1, verbose = FALSE)
@@ -101,12 +95,20 @@ trainModelffs <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric,
   #### chose initial best model from all combinations of two variables
   twogrid <- t(data.frame(combn(names(indp),2)))
   for (i in seq(nrow(twogrid))){
+    if(runParallel){
+      require(doParallel)
+      cl <- makeCluster(detectCores()-1)
+      registerDoParallel(cl)
+    }
     set.seed(seed_nbr)
     model <- try(train(indp[,twogrid[i,]],
                    resp,
                    method=mthd,
                    trControl=trCntr,
                    tuneGrid = lut$MTHD_DEF_LST[[mthd]]$tunegr))
+    if(runParallel){
+      stopCluster(cl)
+    }
     
     ### compare the model with the currently best model
     if(inherits(model, "try-error")){
@@ -152,6 +154,11 @@ trainModelffs <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric,
       break()
     }
     for (i in seq(length(nextvars))){
+      if(runParallel){
+        require(doParallel)
+        cl <- makeCluster(detectCores()-1)
+        registerDoParallel(cl)
+      }
       set.seed(seed_nbr)
       model <- try(train(indp[,c(startvars,nextvars[i])],
                      resp,
@@ -159,6 +166,9 @@ trainModelffs <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric,
                      trControl = trCntr,
                      # tuneLength = tuneLength,
                      tuneGrid = lut$MTHD_DEF_LST[[mthd]]$tunegr))
+      if(runParallel){
+        stopCluster(cl)
+      }
       
       if(inherits(model, "try-error")){
         NULL
@@ -181,9 +191,6 @@ trainModelffs <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric,
       print(paste0("maxmimum number of models that still need to be trained: ",
                    (((n-1)^2)+n-1)/2 + (((n-2)^2)+n-2)/2 - acc))
     }
-  }
-  if(runParallel){
-    stopCluster(cl)
   }
   return(bestmodel)
 }
