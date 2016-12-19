@@ -1,9 +1,9 @@
-#' Compute contingency tests over all model responses
+#' Compute contingency tests for all model responses
 #'
 #' @description
-#' Compute contingency tests over all model responses
+#' Compute individual or averaged contingency tests for all predicted variables
 #' 
-#' @param NONE
+#' @param models A gpm model object containing 
 #'
 #' @name compContTests
 #' 

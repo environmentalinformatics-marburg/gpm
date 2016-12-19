@@ -2,38 +2,44 @@ if ( !isGeneric("resamplingsByVariable") ) {
   setGeneric("resamplingsByVariable", function(x, ...)
     standardGeneric("resamplingsByVariable"))
 }
-#' Resampling by specific variable
+#' Resampling by specific selector variable
 #'
-#' @description
-#' This function creates n sets of resamplings where the column 
-#' entries of a data frame are sampled based on a specific selector variable.
-#' Within each sample, only m column entries for each unique value of the
-#' selector variable are selected.
+#' @description 
+#' This function creates n sets of resamplings where the rows of a data frame 
+#' are sampled based on a specific selector variable. The selector variable is
+#' defined in the meta information layer of the gpm object. Within each sample, 
+#' only m samples for each unique value of the selector variable are selected.
 #' 
-#' @param NONE
-#'
-#' @return NONE
-#'
+#' @param x An object of class gpm or data.frame
+#' @param selector The column name of the selector variable
+#' @param grabs The number m of samples per unique selector value
+#' @param resample The number n of resamplings computed
+#' 
 #' @name resamplingsByVariable
 #' 
 #' @export resamplingsByVariable
 #' 
-#' @details NONE
+#' @details The resamplings do not contain the actual data values but the row 
+#' numbers indicating which rows should be selected from the supplied data layer
+#' during later processing steps.
 #' 
-#' @references  NONE
+#' @references  \code{\link{splitMultResp}} for splitting the samples into 
+#' training and testing subsets.
 #' 
 #' @seealso NONE
 #' 
 #' @examples
-#' # Not run
+#' \dontrun{
+#' #Not run
+#' }
 #' 
 NULL
 
 
 # Function using gpm object ----------------------------------------------------
 #' 
-#' @return List with n resampled sets of row numbers from which the column 
-#' entries should be taken.
+#' @return A layer within the gpm object with the information on the n 
+#' individual resamplings.
 #' 
 #' @rdname resamplingsByVariable
 #'
@@ -46,8 +52,7 @@ setMethod("resamplingsByVariable",
 
 # Function using data frame ----------------------------------------------------
 #' 
-#' @return List with n resampled sets of row numbers from which the column 
-#' entries should be taken.
+#' @return A list of length n with the individual resamplings.
 #' 
 #' @rdname resamplingsByVariable
 #'

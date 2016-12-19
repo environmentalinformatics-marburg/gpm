@@ -2,12 +2,25 @@ if ( !isGeneric("trainModel") ) {
   setGeneric("trainModel", function(x, ...)
     standardGeneric("trainModel"))
 }
-#' Train machine learning model
+#' Model training and performance using cross-validation
 #'
 #' @description
-#' Train machine learning model.
+#' Train a model and estimate the model performance using multiple resamplings 
+#' each devided into training and independent subsets. Training subsets are 
+#' further divided into k-fold cross-validation samples for model tuing. Testing
+#' sampels are used for the independent validation of the final model. This
+#' procedure is repeated for each resampling provided.
 #' 
-#' @param NONE
+#' @param x An object of class gpm or data.frame
+#' @param response The column name(s) of the response variable(s)
+#' @param independent The column ID of the predictor, i.e. independent 
+#' variable(s) in the dataset
+#' @param resamples The list of the resamples containing the individual row 
+#' numbers (resulting from function \code{\link{resamplingsByVariable}})
+#' @param mode Variable selection mode, either recursive feature elimination 
+#' ("rfe") or forward feature selection ("ffs)
+#' @ n_var = NULL, response_nbr = NULL, resample_nbr = NULL, mthd = "rf",seed_nbr = 11, cv_nbr = 2,var_selection = c("sd", "indv"),filepath_tmp = NULL
+
 #'
 #' @return NONE
 #'

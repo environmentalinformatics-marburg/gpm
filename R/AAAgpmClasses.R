@@ -1,6 +1,6 @@
 #' An S4 class to represent gpm metadata information
 #' 
-#' @slot meta a list object containing meta information
+#' @slot meta a list object containing meta information concenring data variables
 #' 
 #' @exportClass GPMMeta
 #' 
@@ -13,7 +13,7 @@ setClass("GPMMeta",
 
 #' An S4 class to represent gpm data layers
 #'
-#' @slot data a list object containing individual data objects
+#' @slot data a list of data frames containing independent, dependent and meta variables
 #' 
 #' @exportClass GPMData
 #' 
