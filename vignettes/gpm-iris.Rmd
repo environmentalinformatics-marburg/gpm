@@ -19,13 +19,13 @@ iris_gpm <- gpm(iris, meta, scale = TRUE)
 
 
 iris_resamples <- resamplingsByVariable(x = iris_gpm@data$input, 
-                                        resample = 10, 
+                                        resample = 5, 
                                         use_selector = "FALSE")
 
 iris_trte <- splitMultResp(x = iris_gpm@data$input, 
                            response = iris_gpm@meta$input$RESPONSE,
                            resamples = iris_resamples,
-                           p = 0.80)
+                           p = 0.75)
 
 
 models <- trainModel(x = iris_gpm,
@@ -33,10 +33,10 @@ models <- trainModel(x = iris_gpm,
                      independent = iris_gpm@meta$input$INDEPENDENT,
                      resamples = iris_trte, 
                      n_var = c(seq(length(iris_gpm@meta$input$INDEPENDENT))),
-                     mthd = "rf", 
-                     seed_nbr = 2016, 
-                     cv_nbr = 5,
-                     var_selection = "sd",
+                     mthd = "gam", 
+                     seed_nbr = 1, 
+                     cv_nbr = 2,
+                     var_selection = "indv",
                      filepath_tmp = NULL)
 
 var_imp <- compVarImp(models, scale = FALSE)

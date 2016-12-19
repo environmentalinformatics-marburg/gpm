@@ -49,7 +49,7 @@ compVarImp <- function(models, scale = FALSE){
           } else {
             variables <- rownames(vi)
           }
-        } else {
+        } else if("importance" %in% names(y$model)){
           vi <- y$model$fit$importance
           if(scale == TRUE){
             vi <- vi / max(vi)
@@ -59,7 +59,18 @@ compVarImp <- function(models, scale = FALSE){
           } else {
             variables <- rownames(vi)
           }
+        } else {
+          vi <- caret::varImp(y$model)
+          if(scale == TRUE){
+            vi <- vi / max(vi)
+          }
+          if(length(rownames(vi)) == 1){
+            variables <- predictors(y$model$fit)
+          } else {
+            variables <- rownames(vi)
+          }
         }
+      
         #       vi <- data.frame(RESPONSE = y$response,
         #                        VARIABLE = variables,
         #                        IMPORTANCE = vi$Overall)

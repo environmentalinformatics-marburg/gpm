@@ -32,7 +32,7 @@ compContTests <- function(models, mean = TRUE){
       if(inherits(y$model, "try-error")){
         NULL
       } else {
-        cont_table <- ftable(y$testing$PREDICTED[,1], 
+        cont_table <- ftable(y$testing$PREDICTED[,which(colnames(y$testing$PREDICTED) == "pred")], 
                              y$testing$RESPONSE)
         n <- length(y$testing$RESPONSE)
         corneg <- cont_table[1,1]
