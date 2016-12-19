@@ -9,68 +9,46 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-### Read and convert data set to class gpm
-```{r, fig.show='hold'}
-data(abies_alba_budburst)
+```{r}
+head(iris)
 
-# abies_alba <- abies_alba[complete.cases(abies_alba),]
+meta <- createGPMMeta(iris, type = "input",
+                      selector = NULL, response = 5, 
+                      independent = c(1:4), meta = NULL)
+iris_gpm <- gpm(iris, meta, scale = TRUE)
 
-meta <- createGPMMeta(dataset = abies_alba, 
-                      selector = 1, response = c(6:7), 
-                      independent = c(9:240), meta = c(2:5, 8:9))
-alb <- gpm(abies_alba, meta)
+
+iris_resamples <- resamplingsByVariable(x = iris_gpm@data$input, 
+                                        resample = 10, 
+                                        use_selector = "FALSE")
+
+iris_trte <- splitMultResp(x = iris_gpm@data$input, 
+                           response = iris_gpm@meta$input$RESPONSE,
+                           resamples = iris_resamples,
+                           p = 0.80)
+
+
+models <- trainModel(x = iris_gpm,
+                     response = iris_gpm@meta$input$RESPONSE, 
+                     independent = iris_gpm@meta$input$INDEPENDENT,
+                     resamples = iris_trte, 
+                     n_var = c(seq(length(iris_gpm@meta$input$INDEPENDENT))),
+                     mthd = "rf", 
+                     seed_nbr = 2016, 
+                     cv_nbr = 5,
+                     var_selection = "sd",
+                     filepath_tmp = NULL)
+
+var_imp <- compVarImp(models, scale = FALSE)
+
+var_imp_scale <- compVarImp(models, scale = TRUE)
+
+var_imp_plot <- plotVarImp(var_imp)
+
+var_imp_heat <- plotVarImpHeatmap(var_imp_scale, xlab = "Species", ylab = "Band")
+
+tstat <- compContTests(models, mean = TRUE)
 ```
-
-
-
-```{r, fig.show='hold'}
-# source("http://bioconductor.org/biocLite.R")
-# biocLite("impute")
-# library(impute)
-# or: rf.impute
-# 4 groups: cohort and two classes of elevation (<= 1000, > 1000)
-# auffüllen von contig...
-
-```
-
-
-```{r, fig.show='hold'}
-alb_resamples <- resamplingsByVariable(x = alb@data$input, 
-                                       selector = alb@data$input$ID, 
-                                       resample = 5)
-
-
-alb_trte <- splitMultResp(x = alb@data$input, 
-                          response = alb@meta$input$RESPONSE,
-                          resamples = alb_resamples,
-                          p = 0.75)
-
-response <- alb@meta$input$RESPONSE
-independent <- alb@meta$input$INDEPENDENT
-
-models <- trainModel(x = alb@data$input, 
-                     response = response, independent = independent,
-                     resamples = alb_trte, n_var = seq(10,200,100),
-                     response_nbr = c(1), resample_nbr = c(2))
-
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
@@ -81,7 +59,7 @@ Vignettes are long form documentation commonly included in packages. Because the
 
 ## Vignette Info
 
-Note the various macros within the `vignette` setion of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
 
 ## Styles
 

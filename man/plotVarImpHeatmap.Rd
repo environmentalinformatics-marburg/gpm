@@ -8,7 +8,19 @@ plotVarImpHeatmap(var_imp, xlab = "Variable", ylab = "Method",
   vis_range = "minmax")
 }
 \arguments{
-\item{NONE}{}
+\item{var_imp}{The resulting variable importance data rame from 
+\code{\link{var_imp}}}
+
+\item{xlab}{The x axis lable of the plot}
+
+\item{ylab}{The y axis lable of the plot}
+
+\item{vis_range}{Either "minmax" for a linear stretch over all values or a
+vector of length two with the numeric minimum and maximum value.}
+}
+\value{
+A list of heatmap visualizations with one visualization per response 
+variable.
 }
 \description{
 Plot mean variable importance over all model responses as heatmap
@@ -17,7 +29,9 @@ Plot mean variable importance over all model responses as heatmap
 NONE
 }
 \examples{
-# Not run
+\dontrun{
+#Not run
+}
 
 }
 \references{

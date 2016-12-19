@@ -19,30 +19,58 @@ if ( !isGeneric("trainModel") ) {
 #' numbers (resulting from function \code{\link{resamplingsByVariable}})
 #' @param mode Variable selection mode, either recursive feature elimination 
 #' ("rfe") or forward feature selection ("ffs)
-#' @ n_var = NULL, response_nbr = NULL, resample_nbr = NULL, mthd = "rf",seed_nbr = 11, cv_nbr = 2,var_selection = c("sd", "indv"),filepath_tmp = NULL
-
-#'
+#' @param n_var Vector holding the number of variables used for the recursive 
+#' feature elimination iterations; must not be continous (e.g. c(1:10, 20, 30))
+#' @param response_nbr Response ID to be computed; only relevant if more than
+#' one response variable is present and a model should not be built for each of
+#' them
+#' @param resample_nbr Resample ID to be computed; only relevant if the model
+#' training should not run over all resamples 
+#' @param mthd Core method used for the model (e.g. "rf" for random forest)
+#' @param seed_nbr Specific seed to be to ensure reproducability
+#' @param cv_nbr Specific cross validation folds to be used for model tuning 
+#' within each forward or backward feature selection/elimination step
+#' @param var_selection Select final number of variables based on a standard
+#' deviation statistic ("sd", more conservative) or by the actual best number
+#' ("indv")
+#' @param filepath_tmp If set, intermediate model results during the variable
+#' selection are writen to disc; if the procedure stops for some reason, the
+#' already computed results can be read in again which saves computation time
+#' (e.g. after an accidential shutdown etc.)
+#' 
 #' @return NONE
 #'
 #' @name trainModel
 #' 
 #' @export trainModel
 #' 
-#' @details NONE
+#' @details The backfard feature selection is based on the implementation of
+#' the caret::rfe function. The forward feature selection is implemented from
+#' scratch. The latter stops if the error statistics get worse after a first
+#' optimum is reached. For model training, the respective caret functions are
+#' used, too.
 #' 
-#' @references  NONE
+#' @references  The function uses functions from:
+#'  Max Kuhn. Contributions from Jed Wing, Steve Weston, Andre Williams, 
+#'  Chris Keefer, Allan Engelhardt, Tony Cooper, Zachary Mayer, Brenton Kenkel, 
+#'  the R Core Team, Michael Benesty, Reynald Lescarbeau, Andrew Ziem, 
+#'  Luca Scrucca, Yuan Tang and Can Candan. (2016). caret: Classification and 
+#'  Regression Training. https://CRAN.R-project.org/package=caret
 #' 
 #' @seealso NONE
 #' 
 #' @examples
-#' # Not run
+#' \dontrun{
+#' #Not run
+#' }
 #' 
 NULL
 
 
 # Function using gpm object ----------------------------------------------------
 #' 
-#' @return Trained model for each sample.
+#' @return A layer within the gpm object with the model training information for
+#' each response variable and all resamplings.
 #' 
 #' @rdname trainModel
 #'
@@ -55,7 +83,7 @@ setMethod("trainModel",
 
 # Function using data frame ----------------------------------------------------
 #' 
-#' @return Trained model for each sample.
+#' @return Trained model for each response variable and all resamplings.
 #' 
 #' @rdname trainModel
 #'

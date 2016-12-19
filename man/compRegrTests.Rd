@@ -8,16 +8,32 @@ compRegrTests(models, per_model = TRUE, per_selector = FALSE,
   sub_selectors = NULL, details = TRUE)
 }
 \arguments{
-\item{NONE}{}
+\item{models}{The trained model for each response variable and all 
+resamplings resulting from \code{\link{trainModel}}}
+
+\item{per_model}{Compute the test statistics per model or averaged over all
+models.}
+
+\item{per_selector}{Compute the test statistics per selector (see 
+\code{\link{resamplingsByVariable}})}
+
+\item{sub_selectors}{Average over a given set of selectors (NULL otherwise)}
+
+\item{details}{Return test details (TRUE/FALSE)}
+}
+\value{
+A data frame containing the test information.
 }
 \description{
-Compute regression tests over all model responses
+Compute regression tests over all model responses.
 }
 \details{
 NONE
 }
 \examples{
-# Not run
+\dontrun{
+#Not run
+}
 
 }
 \references{

@@ -7,20 +7,36 @@
 compVarImp(models, scale = FALSE)
 }
 \arguments{
-\item{NONE}{}
+\item{models}{The trained model for each response variable and all 
+resamplings resulting from \code{\link{trainModel}}}
+
+\item{scale}{Scale variable importance over all resamplings or use individual
+values (TRUE/FALSE)}
+}
+\value{
+A data frame containing the variable importance over for each
+response variable and all resamplings.
 }
 \description{
-Compute mean variable importance over all model responses and resamplings
+Compute mean variable importance over all model responses and resamplings.
 }
 \details{
-NONE
+The variable importance is extracted from the model training dataset
+based on functions supplied by the caret package.
 }
 \examples{
-# Not run
+\dontrun{
+#Not run
+}
 
 }
 \references{
-NONE
+The function uses functions from:
+ Max Kuhn. Contributions from Jed Wing, Steve Weston, Andre Williams, 
+ Chris Keefer, Allan Engelhardt, Tony Cooper, Zachary Mayer, Brenton Kenkel, 
+ the R Core Team, Michael Benesty, Reynald Lescarbeau, Andrew Ziem, 
+ Luca Scrucca, Yuan Tang and Can Candan. (2016). caret: Classification and 
+ Regression Training. https://CRAN.R-project.org/package=caret
 }
 \seealso{
 NONE

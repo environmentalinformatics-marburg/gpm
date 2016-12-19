@@ -10,6 +10,6 @@ An S4 class to represent gpm data layers
 \section{Slots}{
 
 \describe{
-\item{\code{data}}{a list object containing individual data objects}
+\item{\code{data}}{a list of data frames containing independent, dependent and meta variables}
 }}
 

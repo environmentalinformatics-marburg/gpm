@@ -1,10 +1,19 @@
 #' Compute regression tests over all model responses
 #'
 #' @description
-#' Compute regression tests over all model responses
+#' Compute regression tests over all model responses.
 #' 
-#' @param NONE
-#'
+#' @param models The trained model for each response variable and all 
+#' resamplings resulting from \code{\link{trainModel}}
+#' @param per_model Compute the test statistics per model or averaged over all
+#' models.
+#' @param per_selector Compute the test statistics per selector (see 
+#' \code{\link{resamplingsByVariable}})
+#' @param sub_selectors Average over a given set of selectors (NULL otherwise)
+#' @param details Return test details (TRUE/FALSE)
+#' 
+#' @return A data frame containing the test information.
+#' 
 #' @name compRegrTests
 #' 
 #' @export compRegrTests
@@ -17,7 +26,9 @@
 #' @seealso NONE
 #' 
 #' @examples
-#' # Not run
+#' \dontrun{
+#' #Not run
+#' }
 #' 
 compRegrTests <- function(models, per_model = TRUE, per_selector = FALSE,
                           sub_selectors = NULL, details = TRUE){

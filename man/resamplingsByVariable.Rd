@@ -5,7 +5,7 @@
 \alias{resamplingsByVariable}
 \alias{resamplingsByVariable,GPM-method}
 \alias{resamplingsByVariable,data.frame-method}
-\title{Resampling by specific variable}
+\title{Resampling by specific selector variable}
 \usage{
 \S4method{resamplingsByVariable}{GPM}(x, grabs = 1, resample = 100)
 
@@ -13,32 +13,40 @@
   resample = 100)
 }
 \arguments{
-\item{NONE}{}
+\item{x}{An object of class gpm or data.frame}
+
+\item{grabs}{The number m of samples per unique selector value}
+
+\item{resample}{The number n of resamplings computed}
+
+\item{selector}{The column name of the selector variable}
 }
 \value{
-NONE
+A layer within the gpm object with the information on the n 
+individual resamplings.
 
-List with n resampled sets of row numbers from which the column 
-entries should be taken.
-
-List with n resampled sets of row numbers from which the column 
-entries should be taken.
+A list of length n with the individual resamplings.
 }
 \description{
-This function creates n sets of resamplings where the column 
-entries of a data frame are sampled based on a specific selector variable.
-Within each sample, only m column entries for each unique value of the
-selector variable are selected.
+This function creates n sets of resamplings where the rows of a data frame 
+are sampled based on a specific selector variable. The selector variable is
+defined in the meta information layer of the gpm object. Within each sample, 
+only m samples for each unique value of the selector variable are selected.
 }
 \details{
-NONE
+The resamplings do not contain the actual data values but the row 
+numbers indicating which rows should be selected from the supplied data layer
+during later processing steps.
 }
 \examples{
-# Not run
+\dontrun{
+#Not run
+}
 
 }
 \references{
-NONE
+\code{\link{splitMultResp}} for splitting the samples into 
+training and testing subsets.
 }
 \seealso{
 NONE

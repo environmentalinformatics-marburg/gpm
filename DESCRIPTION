@@ -12,7 +12,6 @@ License: GPL-3
 Depends:
     caret,
     gridExtra,
-    impute,
     latticeExtra,
     raster,
     satellite,
@@ -22,7 +21,8 @@ Imports:
     tools
 Suggests:
     testthat,
-    knitr
+    knitr,
+    rmarkdown
 LazyData: true
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1

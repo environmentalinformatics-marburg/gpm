@@ -3,7 +3,12 @@
 #' @description
 #' Compute individual or averaged contingency tests for all predicted variables
 #' 
-#' @param models A gpm model object containing 
+#' @param models The trained model for each response variable and all 
+#' resamplings resulting from \code{\link{trainModel}}
+#' @param mean Compute the mean contingengy test results over all response 
+#' variables or return an indivual result for each one of them
+#' 
+#' @return A data frame containing the contingency test information.
 #'
 #' @name compContTests
 #' 
@@ -17,7 +22,9 @@
 #' @seealso NONE
 #' 
 #' @examples
-#' # Not run
+#' \dontrun{
+#' #Not run
+#' }
 #' 
 compContTests <- function(models, mean = TRUE){
   cont_test <- lapply(models, function(x){

@@ -7,20 +7,31 @@
 plotVarImp(var_imp)
 }
 \arguments{
-\item{NONE}{}
+\item{var_imp}{The resulting variable importance data rame from 
+\code{\link{var_imp}}}
+}
+\value{
+A list of visualizations with one visualization per response variable.
 }
 \description{
-Plot mean variable importance over all model responses
+Plot mean variable importance over all model responses as horizontal bar plot.
 }
 \details{
 NONE
 }
 \examples{
-# Not run
+\dontrun{
+#Not run
+}
 
 }
 \references{
-NONE
+The function uses functions from:
+ Max Kuhn. Contributions from Jed Wing, Steve Weston, Andre Williams, 
+ Chris Keefer, Allan Engelhardt, Tony Cooper, Zachary Mayer, Brenton Kenkel, 
+ the R Core Team, Michael Benesty, Reynald Lescarbeau, Andrew Ziem, 
+ Luca Scrucca, Yuan Tang and Can Candan. (2016). caret: Classification and 
+ Regression Training. https://CRAN.R-project.org/package=caret
 }
 \seealso{
 NONE

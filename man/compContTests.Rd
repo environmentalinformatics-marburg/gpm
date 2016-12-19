@@ -2,21 +2,30 @@
 % Please edit documentation in R/compContTests.R
 \name{compContTests}
 \alias{compContTests}
-\title{Compute contingency tests over all model responses}
+\title{Compute contingency tests for all model responses}
 \usage{
 compContTests(models, mean = TRUE)
 }
 \arguments{
-\item{NONE}{}
+\item{models}{The trained model for each response variable and all 
+resamplings resulting from \code{\link{trainModel}}}
+
+\item{mean}{Compute the mean contingengy test results over all response 
+variables or return an indivual result for each one of them}
+}
+\value{
+A data frame containing the contingency test information.
 }
 \description{
-Compute contingency tests over all model responses
+Compute individual or averaged contingency tests for all predicted variables
 }
 \details{
 NONE
 }
 \examples{
-# Not run
+\dontrun{
+#Not run
+}
 
 }
 \references{

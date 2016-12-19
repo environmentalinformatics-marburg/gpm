@@ -10,6 +10,6 @@ An S4 class to represent gpm metadata information
 \section{Slots}{
 
 \describe{
-\item{\code{meta}}{a list object containing meta information}
+\item{\code{meta}}{a list object containing meta information concenring data variables}
 }}
 

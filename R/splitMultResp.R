@@ -20,7 +20,7 @@ if ( !isGeneric("splitMultResp") ) {
 #' (default 0.75)
 #' @param use_selector Use the selector variable for splitting the samples into
 #' training or testing (default FALSE).
-#' selector The column name of the selector variable. Only 
+#' @param selector The column name of the selector variable. Only 
 #' relevant if use_selector is TRUE.
 #'
 #' @name splitMultResp

@@ -5,40 +5,65 @@
 \alias{splitMultResp}
 \alias{splitMultResp,GPM-method}
 \alias{splitMultResp,data.frame-method}
-\title{Split dataset into testing and training samples for each response variable}
+\title{Split dataset into testing and training samples individually for each 
+response variable}
 \usage{
-\S4method{splitMultResp}{GPM}(x, grabs = 1, resample = 100)
+\S4method{splitMultResp}{GPM}(x, p = 0.75, use_selector = "FALSE")
 
 \S4method{splitMultResp}{data.frame}(x, response, resamples, p = 0.75,
-  selector = NULL)
+  use_selector = "FALSE", selector = NULL)
 }
 \arguments{
-\item{NONE}{}
+\item{x}{An object of class gpm or data.frame}
+
+\item{p}{The fraction of each sample to be used for model training 
+(default 0.75)}
+
+\item{use_selector}{Use the selector variable for splitting the samples into
+training or testing (default FALSE).
+selector The column name of the selector variable. Only 
+relevant if use_selector is TRUE.}
+
+\item{response}{The column name(s) of the response variable(s)}
+
+\item{resamples}{The list of the resamples containing the individual row 
+numbers (resulting from function \code{\link{resamplingsByVariable}})}
 }
 \value{
-NONE
+A layer within the gpm object with the information on the n 
+individual resamplings.
 
-List with n resampled sets of row numbers from which the column 
-entries should be taken.
-
-List with n resampled sets of row numbers from which the column 
-entries should be taken.
+A nested list with training and testing samples for each of the n
+resamplings.
 }
 \description{
-Split a data set into testing and training samples separate for each response
-variable while preserving the frequency distribution of the response variable.
+Split a data set into testing and training samples. If more than one
+response (i.e. independent) variable is supplied, a different set of
+testing/training pairs is created for each of them. The training/testing
+samples preserve the frequency distribution of the individual response 
+variable.
 }
 \details{
-NONE
+The split into training and testing samples is realized by using 
+the caret::createDataPartition function which preserves the frequency
+distribution of the individual response variable(s).
 }
 \examples{
-# Not run
+\dontrun{
+#Not run
+}
 
 }
 \references{
-NONE
+The function uses functions from:
+ Max Kuhn. Contributions from Jed Wing, Steve Weston, Andre Williams, 
+ Chris Keefer, Allan Engelhardt, Tony Cooper, Zachary Mayer, Brenton Kenkel, 
+ the R Core Team, Michael Benesty, Reynald Lescarbeau, Andrew Ziem, 
+ Luca Scrucca, Yuan Tang and Can Candan. (2016). caret: Classification and 
+ Regression Training. https://CRAN.R-project.org/package=caret
 }
 \seealso{
-NONE
+\code{\link{resamplingsByVariable}} for creating n resamplings from
+the original dataset.
 }
 
