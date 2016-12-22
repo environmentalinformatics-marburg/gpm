@@ -87,7 +87,7 @@ compContTests <- function(models, mean = TRUE){
     })
     act_cont_test <- do.call("rbind", act_cont_test)
   })
-  
+
   if(mean == TRUE){
     cont_test_mean <- lapply(cont_test, function(x){
       data.frame(Response = x$Response[1], 
@@ -110,7 +110,7 @@ compContTests <- function(models, mean = TRUE){
                  HK_mean = mean(x$HK, na.rm = TRUE),
                  HSS_mean = mean(x$HSS, na.rm = TRUE))
     })
-    cont_test <- list(do.call("rbind", cont_test_mean), cont_test)
+    cont_test <- list(do.call("rbind", cont_test_mean), do.call("rbind", cont_test))
   }
   return(cont_test)
 }

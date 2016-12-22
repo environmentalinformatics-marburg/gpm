@@ -152,7 +152,7 @@ setMethod("trainModel",
                                    trControl = trCntr,
                                    # tuneLength = tuneLength,
                                    tuneGrid = lut$MTHD_DEF_LST[[mthd]]$tunegr,
-                                   verbose = TRUE))
+                                   verbose = FALSE))
                   }
                   
                 } else if (mode == "ffs"){

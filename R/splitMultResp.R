@@ -77,7 +77,7 @@ setMethod("splitMultResp",
             if(use_selector == FALSE){
               fs <- lapply(response, function(i){
                 idv <- lapply(resamples, function(j){
-                  smpl <- caret::createDataPartition(x[j, i], p = 0.75, 
+                  smpl <- caret::createDataPartition(x[j, i], p = p, 
                                                      list = FALSE, times = 1)
                   training = list(SAMPLES = as.numeric(j[smpl]), RESPONSE = i)
                   testing = list(SAMPLES = as.numeric(j[-smpl]), RESPONSE = i)

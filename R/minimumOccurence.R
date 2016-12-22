@@ -10,20 +10,30 @@
 #' which occure at least on n locations on average within multiple resamples 
 #' withour replacement.
 #' 
-#' @param NONE
-#'
+#' @param x An object of class gpm or data.frame
+#' @param selector The column name of the selector variable which is used to
+#' compute the minimum occurence distribution
+#' @param occurence Value indicating occurence (default "yes")
+#' @param resample Number of resamples used to estimate the occurence 
+#' (default 100)
+#' @param thv Thresholdvalue which should be exceed in the occurence in order to
+#' include the respective variable in the result list.
+#' 
 #' @name minimumOccurence
 #' 
 #' @export minimumOccurence
 #' 
-#' @details NONE
+#' @details The occurence is not counted but estimated based on samples which
+#' are drawn from the dataset with one sample per selector ID.
 #' 
 #' @references  NONE
 #' 
 #' @seealso NONE
 #' 
 #' @examples
-#' # Not run
+#' \dontrun{
+#' #Not run
+#' }
 #' 
 NULL
 

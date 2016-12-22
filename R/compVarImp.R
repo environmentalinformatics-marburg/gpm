@@ -39,37 +39,45 @@ compVarImp <- function(models, scale = FALSE){
       if(inherits(y$model, "try-error")){
         NULL
       } else {
-        if("finalModel" %in% names(y$model)){
-          vi <- y$model$finalModel$importance
-          if(scale == TRUE){
-            vi <- vi / max(vi)
-          }
-          if(length(rownames(vi)) == 1){
-            variables <- predictors(y$model$finalModel)
-          } else {
-            variables <- rownames(vi)
-          }
-        } else if("importance" %in% names(y$model)){
-          vi <- y$model$fit$importance
-          if(scale == TRUE){
-            vi <- vi / max(vi)
-          }
-          if(length(rownames(vi)) == 1){
-            variables <- predictors(y$model$fit)
-          } else {
-            variables <- rownames(vi)
-          }
-        } else {
-          vi <- caret::varImp(y$model)
-          if(scale == TRUE){
-            vi <- vi / max(vi)
-          }
-          if(length(rownames(vi)) == 1){
-            variables <- predictors(y$model$fit)
-          } else {
-            variables <- rownames(vi)
-          }
+        vi <- caret::varImp(y$model)
+        if(scale == TRUE){
+          vi <- vi / max(vi)
         }
+        variables <- rownames(vi)
+#         if("finalModel" %in% names(y$model)){
+#           print("finalModel")
+#           vi <- y$model$finalModel$importance
+#           if(scale == TRUE){
+#             vi <- vi / max(vi)
+#           }
+#           if(length(rownames(vi)) == 1){
+#             variables <- predictors(y$model$finalModel)
+#           } else {
+#             variables <- rownames(vi)
+#           }
+#         } else if("importance" %in% names(y$model)){
+#           print("importance")
+#           vi <- y$model$fit$importance
+#           if(scale == TRUE){
+#             vi <- vi / max(vi)
+#           }
+#           if(length(rownames(vi)) == 1){
+#             variables <- predictors(y$model$fit)
+#           } else {
+#             variables <- rownames(vi)
+#           }
+#         } else {
+#           print("other")
+#           vi <- caret::varImp(y$model)
+#           if(scale == TRUE){
+#             vi <- vi / max(vi)
+#           }
+#           if(length(rownames(vi)) == 1){
+#             variables <- predictors(y$model$fit)
+#           } else {
+#             variables <- rownames(vi)
+#           }
+#         }
       
         #       vi <- data.frame(RESPONSE = y$response,
         #                        VARIABLE = variables,

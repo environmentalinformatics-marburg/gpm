@@ -62,7 +62,7 @@ setMethod("resamplingsByVariable",
 #'
 setMethod("resamplingsByVariable", 
           signature(x = "data.frame"), 
-          function(x, resample = 100, use_selector = "FALSE", selector = NULL, 
+          function(x, resample = 100, use_selector = FALSE, selector = NULL, 
                    grabs = 1){
             if(use_selector == TRUE){
               smpl <- lapply(seq(resample), function(i){
