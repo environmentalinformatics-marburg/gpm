@@ -8,10 +8,10 @@
 \title{Split dataset into testing and training samples individually for each 
 response variable}
 \usage{
-\S4method{splitMultResp}{GPM}(x, p = 0.75, use_selector = "FALSE")
+\S4method{splitMultResp}{GPM}(x, p = 0.75, use_selector = FALSE)
 
 \S4method{splitMultResp}{data.frame}(x, response, resamples, p = 0.75,
-  use_selector = "FALSE", selector = NULL)
+  use_selector = FALSE, selector = NULL)
 }
 \arguments{
 \item{x}{An object of class gpm or data.frame}
@@ -20,14 +20,15 @@ response variable}
 (default 0.75)}
 
 \item{use_selector}{Use the selector variable for splitting the samples into
-training or testing (default FALSE).
-selector The column name of the selector variable. Only 
-relevant if use_selector is TRUE.}
+training or testing (default FALSE).}
 
 \item{response}{The column name(s) of the response variable(s)}
 
 \item{resamples}{The list of the resamples containing the individual row 
 numbers (resulting from function \code{\link{resamplingsByVariable}})}
+
+\item{selector}{The column name of the selector variable. Only 
+relevant if use_selector is TRUE.}
 }
 \value{
 A layer within the gpm object with the information on the n 
@@ -38,7 +39,7 @@ resamplings.
 }
 \description{
 Split a data set into testing and training samples. If more than one
-response (i.e. independent) variable is supplied, a different set of
+response (i.e. dependent) variable is supplied, a different set of
 testing/training pairs is created for each of them. The training/testing
 samples preserve the frequency distribution of the individual response 
 variable.

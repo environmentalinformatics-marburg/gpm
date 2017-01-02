@@ -47,11 +47,20 @@ NULL
 #'
 setMethod("minimumOccurence", 
           signature(x = "GPM"), 
-          function(x, resample = 100, thv = 20){
-            return("TODO")
+          function(x, occurence = "yes", resample = 100, thv = 20){
+          x@meta$input$MIN_OCCURENCE <- 
+              minimumOccurence(x = x@data$input[, x@meta$input$RESPONSE],
+                               selector = x@data$input[, x@meta$input$SELECTOR],
+                               occurence = occurence, 
+                               resample = resample, 
+                               thv = thv)
+            x@meta$input$RESPONSE_FINAL <- x@meta$input$MIN_OCCURENCE$names
+             return(x)
           })
-
-
+ 
+ 
+ 
+ 
 # Function using data frame ----------------------------------------------------
 #' 
 #' @return Columnnames of the features occuring at least on n locations on 
@@ -64,6 +73,7 @@ setMethod("minimumOccurence",
           function(x, selector, occurence = "yes", resample = 100, thv = 20){
             si <- 0
             mo <- do.call("rbind", lapply(seq(resample), function(i){
+              if(i %% 10 == 0) print(paste0("Processing sample ", i, " of ", resample))
               si <- si + 1
               sj <- 0
               act_smpl <- do.call("rbind", lapply(unique(selector), function(j){
@@ -82,6 +92,6 @@ setMethod("minimumOccurence",
               return(occ)
             }))
             mo_mean <- colMeans(mo)
-            return(list(names = names(mo_mean[mo_mean >= thv]),
-                        mo_mean = mo_mean[mo_mean >= thv]))
+            return(data.frame(names = names(mo_mean[mo_mean >= thv]),
+                              mo_mean = mo_mean[mo_mean >= thv]))
           })

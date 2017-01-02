@@ -13,7 +13,7 @@ if ( !isGeneric("trainModel") ) {
 #' 
 #' @param x An object of class gpm or data.frame
 #' @param response The column name(s) of the response variable(s)
-#' @param independent The column ID of the predictor, i.e. independent 
+#' @param predictor The column ID of the predictor, i.e. independent 
 #' variable(s) in the dataset
 #' @param resamples The list of the resamples containing the individual row 
 #' numbers (resulting from function \code{\link{resamplingsByVariable}})
@@ -89,7 +89,7 @@ setMethod("trainModel",
 #'
 setMethod("trainModel", 
           signature(x = "data.frame"),
-          trainModel <- function(x, response, independent, resamples,
+          trainModel <- function(x, response, predictor, resamples,
                                  mode = c("rfe", "ffs"),
                                  n_var = NULL, response_nbr = NULL, 
                                  resample_nbr = NULL, mthd = "rf",
@@ -98,7 +98,7 @@ setMethod("trainModel",
                                  filepath_tmp = NULL){
             mode <- mode[1]
             var_selection <- var_selection[1]
-            independent_best <- independent
+            predictor_best <- predictor
             
             if(is.null(response_nbr)){
               response_nbr <- seq(length(response))
@@ -116,7 +116,7 @@ setMethod("trainModel",
                 
                 resp <- x@data$input[act_resample$training$SAMPLES, 
                                      act_resample$training$RESPONSE]
-                indp <- x@data$input[act_resample$training$SAMPLES, independent]
+                indp <- x@data$input[act_resample$training$SAMPLES, predictor]
                 
                 if(class(resp) == "factor"){ 
                   metric = "Accuracy"
@@ -132,12 +132,12 @@ setMethod("trainModel",
                   
                   
                   if(!inherits(model, "try-error") & var_selection == "sd"){
-                    independent_best <- gpm:::trainModelVarSelSD(model, 
+                    predictor_best <- gpm:::trainModelVarSelSD(model, 
                                                                metric = model$metric, 
                                                                maximize=FALSE,
                                                                sderror=TRUE)
-                    if(class(independent_best) != "character"){
-                      independent_best <- as.character(names(independent_best))
+                    if(class(predictor_best) != "character"){
+                      predictor_best <- as.character(names(predictor_best))
                     }
                     cv_splits <- caret::createFolds(resp, k=cv_nbr, returnTrain = TRUE)
                     
@@ -147,7 +147,7 @@ setMethod("trainModel",
                                                   repeats = 1, verbose = FALSE)
                     # savePredictions = TRUE
                     
-                    model <- try(train(indp[, independent_best], resp,  
+                    model <- try(train(indp[, predictor_best], resp,  
                                    metric = metric, method = mthd,
                                    trControl = trCntr,
                                    # tuneLength = tuneLength,
@@ -166,7 +166,7 @@ setMethod("trainModel",
                                                x@meta$input$SELECTOR]
                 train_meta <- x@data$input[act_resample$training$SAMPLES, 
                                            x@meta$input$META]
-                training <- list(RESPONSE = resp, INDEPENDENT = indp[, independent_best],
+                training <- list(RESPONSE = resp, PREDICTOR = indp[, predictor_best],
                                  SELECTOR = train_selector, META = train_meta)
                 
                 if(inherits(model, "try-error")){
@@ -175,7 +175,7 @@ setMethod("trainModel",
                   
                   test_resp <- x@data$input[act_resample$testing$SAMPLES, 
                                             act_resample$testing$RESPONSE]
-                  test_indp <- x@data$input[act_resample$testing$SAMPLES, independent_best]
+                  test_indp <- x@data$input[act_resample$testing$SAMPLES, predictor_best]
                   
                   if(class(model) == "train"){
                     test_pred <- data.frame(pred = predict(model, test_indp, type = "raw"))
@@ -194,7 +194,7 @@ setMethod("trainModel",
                                                 x@meta$input$SELECTOR]
                   test_meta <- x@data$input[act_resample$testing$SAMPLES, 
                                             x@meta$input$META]
-                  testing <-  list(RESPONSE = test_resp, INDEPENDENT = test_indp,
+                  testing <-  list(RESPONSE = test_resp, PREDICTOR = test_indp,
                                    PREDICTED = test_pred, 
                                    SELECTOR = test_selector, META = test_meta)
                 }

@@ -7,7 +7,7 @@ if ( !isGeneric("splitMultResp") ) {
 #'
 #' @description
 #' Split a data set into testing and training samples. If more than one
-#' response (i.e. independent) variable is supplied, a different set of
+#' response (i.e. dependent) variable is supplied, a different set of
 #' testing/training pairs is created for each of them. The training/testing
 #' samples preserve the frequency distribution of the individual response 
 #' variable.
@@ -58,8 +58,14 @@ NULL
 #'
 setMethod("splitMultResp", 
           signature(x = "GPM"), 
-          function(x, p = 0.75, use_selector = "FALSE"){
-            return("TODO")
+          function(x, p = 0.75, use_selector = FALSE){
+            x@meta$input$TRAIN_TEST <- splitMultResp(x = x@data$input, 
+                                             response = x@meta$input$RESPONSE,
+                                             resamples = x@meta$input$RESAMPLES,
+                                             p = p, 
+                                             use_selector = use_selector,
+                                             selector = x@meta$input$SELECTOR)
+            return(x)
           })
 
 
@@ -72,7 +78,7 @@ setMethod("splitMultResp",
 #'
 setMethod("splitMultResp", 
           signature(x = "data.frame"),
-          function(x, response, resamples, p = 0.75, use_selector = "FALSE",
+          function(x, response, resamples, p = 0.75, use_selector = FALSE,
                    selector = NULL){
             if(use_selector == FALSE){
               fs <- lapply(response, function(i){
@@ -93,7 +99,7 @@ setMethod("splitMultResp",
             } else {
               fs <- lapply(response, function(i){
                 idv <- lapply(resamples, function(j){
-                  smpl <- which(x[,selector] == unique(x[,selector])[1])
+                  smpl <- which(x[, selector] == unique(x[,selector])[1])
                   training = list(SAMPLES = as.numeric(j[smpl]), RESPONSE = i)
                   testing = list(SAMPLES = as.numeric(j[-smpl]), RESPONSE = i)
                   list(training = training, testing = testing)

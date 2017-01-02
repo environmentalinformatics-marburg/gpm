@@ -5,21 +5,26 @@
 \alias{resamplingsByVariable}
 \alias{resamplingsByVariable,GPM-method}
 \alias{resamplingsByVariable,data.frame-method}
-\title{Resampling by specific selector variable}
+\title{Create identical samples or resample by specific selector variable}
 \usage{
-\S4method{resamplingsByVariable}{GPM}(x, grabs = 1, resample = 100)
-
-\S4method{resamplingsByVariable}{data.frame}(x, selector, grabs = 1,
+\S4method{resamplingsByVariable}{GPM}(x, use_selector = FALSE, grabs = 1,
   resample = 100)
+
+\S4method{resamplingsByVariable}{data.frame}(x, resample = 100,
+  use_selector = FALSE, selector = NULL, grabs = 1)
 }
 \arguments{
 \item{x}{An object of class gpm or data.frame}
+
+\item{use_selector}{Use the selector variable for splitting the samples into
+training or testing (default FALSE).}
 
 \item{grabs}{The number m of samples per unique selector value}
 
 \item{resample}{The number n of resamplings computed}
 
-\item{selector}{The column name of the selector variable}
+\item{selector}{The column name of the selector variable. Only 
+relevant if use_selector is TRUE.}
 }
 \value{
 A layer within the gpm object with the information on the n 
@@ -28,10 +33,11 @@ individual resamplings.
 A list of length n with the individual resamplings.
 }
 \description{
-This function creates n sets of resamplings where the rows of a data frame 
-are sampled based on a specific selector variable. The selector variable is
-defined in the meta information layer of the gpm object. Within each sample, 
-only m samples for each unique value of the selector variable are selected.
+This function creates n sets of identical resamples or resamplings where the
+rows of a data frame are sampled based on a specific selector variable. The 
+selector variable is defined in the meta information layer of the gpm object. 
+Within each sample, only m samples for each unique value of the selector 
+variable are selected.
 }
 \details{
 The resamplings do not contain the actual data values but the row 

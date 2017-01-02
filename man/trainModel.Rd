@@ -9,7 +9,7 @@
 \usage{
 \S4method{trainModel}{GPM}(x, grabs = 1, resample = 100)
 
-\S4method{trainModel}{data.frame}(x, response, independent, resamples,
+\S4method{trainModel}{data.frame}(x, response, predictor, resamples,
   mode = c("rfe", "ffs"), n_var = NULL, response_nbr = NULL,
   resample_nbr = NULL, mthd = "rf", seed_nbr = 11, cv_nbr = 2,
   var_selection = c("sd", "indv"), filepath_tmp = NULL)
@@ -19,7 +19,7 @@
 
 \item{response}{The column name(s) of the response variable(s)}
 
-\item{independent}{The column ID of the predictor, i.e. independent 
+\item{predictor}{The column ID of the predictor, i.e. independent 
 variable(s) in the dataset}
 
 \item{resamples}{The list of the resamples containing the individual row 

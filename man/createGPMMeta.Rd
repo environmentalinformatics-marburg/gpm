@@ -4,7 +4,7 @@
 \alias{createGPMMeta}
 \title{Create a meta information dataset in gpm format}
 \usage{
-createGPMMeta(dataset, type = "input", selector, response, independent, meta)
+createGPMMeta(dataset, type = "input", selector, response, predictor, meta)
 }
 \arguments{
 \item{dataset}{The name of the data frame variable used for initializing the 
@@ -18,7 +18,7 @@ the sampling of subsets during model training}
 \item{response}{The column ID of the response, i.e. dependent variable(s) in 
 the dataset}
 
-\item{independent}{The column ID of the predictor, i.e. independent 
+\item{predictor}{The column ID of the predictor, i.e. independent 
 variable(s) in the dataset}
 
 \item{meta}{The column ID of variables in the dataset which contain only meta

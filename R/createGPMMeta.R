@@ -10,7 +10,7 @@
 #' the sampling of subsets during model training
 #' @param response The column ID of the response, i.e. dependent variable(s) in 
 #' the dataset
-#' @param independent The column ID of the predictor, i.e. independent 
+#' @param predictor The column ID of the predictor, i.e. independent 
 #' variable(s) in the dataset
 #' @param meta The column ID of variables in the dataset which contain only meta
 #' information not relevant for the model training
@@ -35,22 +35,24 @@
 #' }
 #' 
 createGPMMeta <- function(dataset, type = "input",
-                          selector, response, independent, meta){
+                          selector, response, predictor, meta){
   if(!any(colnames(dataset) %in% selector)){
-    selector = colnames(dataset)[selector]
+    selector <- colnames(dataset)[selector]
   }
   if(!any(colnames(dataset) %in% response)){
-    response = colnames(dataset)[response]
+    response <- colnames(dataset)[response]
   }
-  if(!any(colnames(dataset) %in% independent)){
-    independent = colnames(dataset)[independent]
+  if(!any(colnames(dataset) %in% predictor)){
+    predictor <- colnames(dataset)[predictor]
   }
   if(!any(colnames(dataset) %in% meta)){
-    meta = colnames(dataset)[meta]
+    meta <- colnames(dataset)[meta]
   }
   list(TYPE = type,
        SELECTOR = selector,
        RESPONSE = response,
-       INDEPENDENT = independent, 
+       RESPONSE_FINAL = response,
+       PREDICTOR = predictor,
+       PREDICTOR_FINAL = predictor, 
        META = meta)
 }

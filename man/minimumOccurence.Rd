@@ -7,13 +7,25 @@
 \alias{minimumOccurence,data.frame-method}
 \title{Select features based on minimum occurence across unique locations}
 \usage{
-\S4method{minimumOccurence}{GPM}(x, resample = 100, thv = 20)
+\S4method{minimumOccurence}{GPM}(x, occurence = "yes", resample = 100,
+  thv = 20)
 
 \S4method{minimumOccurence}{data.frame}(x, selector, occurence = "yes",
   resample = 100, thv = 20)
 }
 \arguments{
-\item{NONE}{}
+\item{x}{An object of class gpm or data.frame}
+
+\item{occurence}{Value indicating occurence (default "yes")}
+
+\item{resample}{Number of resamples used to estimate the occurence 
+(default 100)}
+
+\item{thv}{Thresholdvalue which should be exceed in the occurence in order to
+include the respective variable in the result list.}
+
+\item{selector}{The column name of the selector variable which is used to
+compute the minimum occurence distribution}
 }
 \value{
 Columnnames of the features occuring at least on n locations on 
@@ -29,10 +41,13 @@ which occure at least on n locations on average within multiple resamples
 withour replacement.
 }
 \details{
-NONE
+The occurence is not counted but estimated based on samples which
+are drawn from the dataset with one sample per selector ID.
 }
 \examples{
-# Not run
+\dontrun{
+#Not run
+}
 
 }
 \references{

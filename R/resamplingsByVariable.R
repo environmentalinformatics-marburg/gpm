@@ -49,10 +49,14 @@ NULL
 #'
 setMethod("resamplingsByVariable", 
           signature(x = "GPM"), 
-          function(x, grabs = 1, resample = 100){
-            return("TODO")
+          function(x, use_selector = FALSE, grabs = 1, resample = 100){
+            x@meta$input$RESAMPLES <- resamplingsByVariable(x = x@data$input, 
+                                                            use_selector = use_selector,
+                                                            selector = x@data$input[, x@meta$input$SELECTOR],
+                                                            grabs = grabs,
+                                                            resample = resample)
+            return(x)
           })
-
 
 # Function using data frame ----------------------------------------------------
 #' 
