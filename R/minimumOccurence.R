@@ -54,7 +54,7 @@ setMethod("minimumOccurence",
                                occurence = occurence, 
                                resample = resample, 
                                thv = thv)
-            x@meta$input$RESPONSE_FINAL <- x@meta$input$MIN_OCCURENCE$names
+            x@meta$input$RESPONSE_FINAL <- as.character(x@meta$input$MIN_OCCURENCE$names)
              return(x)
           })
  

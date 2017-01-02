@@ -60,7 +60,7 @@ setMethod("splitMultResp",
           signature(x = "GPM"), 
           function(x, p = 0.75, use_selector = FALSE){
             x@meta$input$TRAIN_TEST <- splitMultResp(x = x@data$input, 
-                                             response = x@meta$input$RESPONSE,
+                                             response = x@meta$input$RESPONSE_FINAL,
                                              resamples = x@meta$input$RESAMPLES,
                                              p = p, 
                                              use_selector = use_selector,
@@ -97,14 +97,15 @@ setMethod("splitMultResp",
                 })
               })
             } else {
-              fs <- lapply(response, function(i){
-                idv <- lapply(resamples, function(j){
-                  smpl <- which(x[, selector] == unique(x[,selector])[1])
-                  training = list(SAMPLES = as.numeric(j[smpl]), RESPONSE = i)
-                  testing = list(SAMPLES = as.numeric(j[-smpl]), RESPONSE = i)
-                  list(training = training, testing = testing)
-                })
-              })
+              #TODO
+#               fs <- lapply(response, function(i){
+#                 idv <- lapply(resamples, function(j){
+#                   smpl <- which(x[, selector] == unique(x[,selector])[1])
+#                   training = list(SAMPLES = as.numeric(j[smpl]), RESPONSE = i)
+#                   testing = list(SAMPLES = as.numeric(j[-smpl]), RESPONSE = i)
+#                   list(training = training, testing = testing)
+#                 })
+#               })
             }
             return(fs)
           })
