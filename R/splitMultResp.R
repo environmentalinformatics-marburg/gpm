@@ -59,13 +59,15 @@ NULL
 setMethod("splitMultResp", 
           signature(x = "GPM"), 
           function(x, p = 0.75, use_selector = FALSE){
-            x@meta$input$TRAIN_TEST <- splitMultResp(x = x@data$input, 
-                                             response = x@meta$input$RESPONSE_FINAL,
-                                             resamples = x@meta$input$RESAMPLES,
-                                             p = p, 
-                                             use_selector = use_selector,
-                                             selector = x@meta$input$SELECTOR)
-            return(x)
+            smr <- splitMultResp(x = x@data$input, 
+                                 response = x@meta$input$RESPONSE_FINAL,
+                                 resamples = x@meta$input$RESAMPLES,
+                                 p = p, 
+                                 use_selector = use_selector,
+                                 selector = x@meta$input$SELECTOR)
+          x@meta$input$TRAIN_TEST <- smr[[1]]
+          x@meta$input$TRAIN_TEST_NSMPLS <- smr[[2]]
+          return(x)
           })
 
 
@@ -83,19 +85,30 @@ setMethod("splitMultResp",
             if(use_selector == FALSE){
               fs <- lapply(response, function(i){
                 idv <- lapply(resamples, function(j){
-                  smpl <- caret::createDataPartition(x[j, i], p = p, 
-                                                     list = FALSE, times = 1)
-                  training = list(SAMPLES = as.numeric(j[smpl]), RESPONSE = i)
-                  testing = list(SAMPLES = as.numeric(j[-smpl]), RESPONSE = i)
-                  # list(training = x[smpl, -response[-which(response %in% i)]], 
-                  #      test = x[-smpl, -response[-which(response %in% i)]])
-                  # x[training$SAMPLES, training$RESPONSE]
-                  # x[testing$SAMPLES, testing$RESPONSE]
-                  # list(training = x[smpl, -response[-which(response %in% i)]], 
-                  #     test = x[-smpl, -response[-which(response %in% i)]])
-                  list(training = training, testing = testing)
+                  smpl <- tryCatch(caret::createDataPartition(x[j, i], p = p, 
+                                                     list = FALSE, times = 1), warning=function(w) w)
+                  if(is(smpl,"warning")){
+                    return(NULL)
+                  } else {
+                    training = list(SAMPLES = as.numeric(j[smpl]), RESPONSE = i)
+                    testing = list(SAMPLES = as.numeric(j[-smpl]), RESPONSE = i)
+                    return(list(training = training, testing = testing))
+                  } 
                 })
               })
+              
+              training_smpls <- lapply(seq(length(fs)), function(i){
+                idv <- lapply(fs[[i]], function(j){
+                  if(is.null(j)){
+                    x <- 0
+                  } else {
+                    x <- 1
+                  }
+                })
+                data.frame(RESPONSE = response[[i]],
+                           TRAINTESTSMPLS = sum(unlist(idv)))
+              })
+              training_smpls <- do.call("rbind", training_smpls)
             } else {
               #TODO
 #               fs <- lapply(response, function(i){
@@ -107,5 +120,5 @@ setMethod("splitMultResp",
 #                 })
 #               })
             }
-            return(fs)
+            return(list(fs, training_smpls))
           })

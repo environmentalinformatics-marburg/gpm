@@ -15,6 +15,8 @@ if ( !isGeneric("trainModel") ) {
 #' @param response The column name(s) of the response variable(s)
 #' @param predictor The column ID of the predictor, i.e. independent 
 #' variable(s) in the dataset
+#' @param selector Selector id
+#' @param meta Meta information of the gpm object
 #' @param resamples The list of the resamples containing the individual row 
 #' numbers (resulting from function \code{\link{resamplingsByVariable}})
 #' @param mode Variable selection mode, either recursive feature elimination 
@@ -76,8 +78,31 @@ NULL
 #'
 setMethod("trainModel", 
           signature(x = "GPM"), 
-          function(x, grabs = 1, resample = 100){
-            return("TODO")
+          function(x, n_var = NULL, 
+                   mthd = "rf", mode = c("rfe", "ffs"),
+                   seed_nbr = 11, cv_nbr = 5,
+                   var_selection = c("sd", "indv"), 
+                   response_nbr = NULL, resample_nbr = NULL,
+                   filepath_tmp = NULL){
+            if(is.null(n_var)){
+              n_var <- seq(length(x@meta$input$PREDICTOR_FINAL))
+            }
+            x@model[paste0(mthd, "_", mode)] <- trainModel(x = x@data$input,
+                                                           response = x@meta$input$RESPONSE_FINAL,
+                                                           predictor = x@meta$input$PREDICTOR_FINAL,
+                                                           selector = x@meta$input$SELECTOR,
+                                                           meta = x@meta$input$META,
+                                                           resamples = x@meta$input$TRAIN_TEST,
+                                                           n_var = n_var,
+                                                           mthd = mthd, 
+                                                           mode = mode,
+                                                           seed_nbr = seed_nbr, 
+                                                           cv_nbr = cv_nbr,
+                                                           var_selection = var_selection,
+                                                           response_nbr = response_nbr,
+                                                           resample_nbr = resample_nbr,
+                                                           filepath_tmp = filepath_tmp)
+            return(x)
           })
 
 
@@ -89,13 +114,12 @@ setMethod("trainModel",
 #'
 setMethod("trainModel", 
           signature(x = "data.frame"),
-          trainModel <- function(x, response, predictor, resamples,
-                                 mode = c("rfe", "ffs"),
-                                 n_var = NULL, response_nbr = NULL, 
-                                 resample_nbr = NULL, mthd = "rf",
-                                 seed_nbr = 11, cv_nbr = 2,
-                                 var_selection = c("sd", "indv"),
-                                 filepath_tmp = NULL){
+          function(x, response, predictor, selector, meta, resamples,
+                   n_var = NULL, mthd = "rf", 
+                   mode = c("rfe", "ffs"), seed_nbr = 11, 
+                   cv_nbr = 2, var_selection = c("sd", "indv"),
+                   response_nbr = NULL, resample_nbr = NULL, 
+                   filepath_tmp = NULL){
             mode <- mode[1]
             var_selection <- var_selection[1]
             predictor_best <- predictor
@@ -114,9 +138,9 @@ setMethod("trainModel",
                 
                 act_resample <- resamples[[i]][[j]]
                 
-                resp <- x@data$input[act_resample$training$SAMPLES, 
-                                     act_resample$training$RESPONSE]
-                indp <- x@data$input[act_resample$training$SAMPLES, predictor]
+                resp <- x[act_resample$training$SAMPLES, 
+                          act_resample$training$RESPONSE]
+                indp <- x[act_resample$training$SAMPLES, predictor]
                 
                 if(class(resp) == "factor"){ 
                   metric = "Accuracy"
@@ -148,11 +172,11 @@ setMethod("trainModel",
                     # savePredictions = TRUE
                     
                     model <- try(train(indp[, predictor_best], resp,  
-                                   metric = metric, method = mthd,
-                                   trControl = trCntr,
-                                   # tuneLength = tuneLength,
-                                   tuneGrid = lut$MTHD_DEF_LST[[mthd]]$tunegr,
-                                   verbose = FALSE))
+                                       metric = metric, method = mthd,
+                                       trControl = trCntr,
+                                       # tuneLength = tuneLength,
+                                       tuneGrid = lut$MTHD_DEF_LST[[mthd]]$tunegr,
+                                       verbose = FALSE))
                   }
                   
                 } else if (mode == "ffs"){
@@ -162,10 +186,8 @@ setMethod("trainModel",
                                              withinSD = TRUE, runParallel = TRUE))
                 }
                 
-                train_selector <- x@data$input[act_resample$training$SAMPLES, 
-                                               x@meta$input$SELECTOR]
-                train_meta <- x@data$input[act_resample$training$SAMPLES, 
-                                           x@meta$input$META]
+                train_selector <- x[act_resample$training$SAMPLES, selector]
+                train_meta <- x[act_resample$training$SAMPLES, meta]
                 training <- list(RESPONSE = resp, PREDICTOR = indp[, predictor_best],
                                  SELECTOR = train_selector, META = train_meta)
                 
@@ -173,15 +195,18 @@ setMethod("trainModel",
                   testing <- list(NA)
                 } else {
                   
-                  test_resp <- x@data$input[act_resample$testing$SAMPLES, 
-                                            act_resample$testing$RESPONSE]
-                  test_indp <- x@data$input[act_resample$testing$SAMPLES, predictor_best]
+                  test_resp <- x[act_resample$testing$SAMPLES, 
+                                 act_resample$testing$RESPONSE]
+                  test_indp <- x[act_resample$testing$SAMPLES, predictor_best]
+                  
+                  test_resp <- test_resp[complete.cases(test_indp)]
+                  test_indp <- test_indp[complete.cases(test_indp),]
                   
                   if(class(model) == "train"){
                     test_pred <- data.frame(pred = predict(model, test_indp, type = "raw"))
                     if(class(resp) == "factor"){
-                        test_pred <- cbind(test_pred, predict(model, test_indp, type = "prob"))
-                      }
+                      test_pred <- cbind(test_pred, predict(model, test_indp, type = "prob"))
+                    }
                     
                     # if(lut$MTHD_DEF_LST[[mthd]]$type == "prob"){
                     #   test_pred <- cbind(test_pred, predict(model, test_indp, type = "prob"))
@@ -189,11 +214,9 @@ setMethod("trainModel",
                   } else {
                     test_pred <- predict(model, test_indp)
                   }
-
-                  test_selector <- x@data$input[act_resample$testing$SAMPLES, 
-                                                x@meta$input$SELECTOR]
-                  test_meta <- x@data$input[act_resample$testing$SAMPLES, 
-                                            x@meta$input$META]
+                  
+                  test_selector <- x[act_resample$testing$SAMPLES, selector]
+                  test_meta <- x[act_resample$testing$SAMPLES, meta]
                   testing <-  list(RESPONSE = test_resp, PREDICTOR = test_indp,
                                    PREDICTED = test_pred, 
                                    SELECTOR = test_selector, META = test_meta)

@@ -39,7 +39,7 @@ compVarImp <- function(models, scale = FALSE){
       if(inherits(y$model, "try-error")){
         NULL
       } else {
-        vi <- caret::varImp(y$model)
+        vi <- caret::varImp(y$model)$importance
         if(scale == TRUE){
           vi <- vi / max(vi)
         }
@@ -84,7 +84,7 @@ compVarImp <- function(models, scale = FALSE){
         #                        IMPORTANCE = vi$Overall)
         vi <- data.frame(RESPONSE = y$response,
                          VARIABLE = variables,
-                         IMPORTANCE = as.data.frame(vi)[,1])
+                         IMPORTANCE = vi$Overall)
       }
     })
     

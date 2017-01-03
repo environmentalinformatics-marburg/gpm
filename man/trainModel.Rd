@@ -7,38 +7,25 @@
 \alias{trainModel,data.frame-method}
 \title{Model training and performance using cross-validation}
 \usage{
-\S4method{trainModel}{GPM}(x, grabs = 1, resample = 100)
+\S4method{trainModel}{GPM}(x, n_var = NULL, mthd = "rf", mode = c("rfe",
+  "ffs"), seed_nbr = 11, cv_nbr = 5, var_selection = c("sd", "indv"),
+  response_nbr = NULL, resample_nbr = NULL, filepath_tmp = NULL)
 
 \S4method{trainModel}{data.frame}(x, response, predictor, resamples,
-  mode = c("rfe", "ffs"), n_var = NULL, response_nbr = NULL,
-  resample_nbr = NULL, mthd = "rf", seed_nbr = 11, cv_nbr = 2,
-  var_selection = c("sd", "indv"), filepath_tmp = NULL)
+  n_var = NULL, mthd = "rf", mode = c("rfe", "ffs"), seed_nbr = 11,
+  cv_nbr = 2, var_selection = c("sd", "indv"), response_nbr = NULL,
+  resample_nbr = NULL, filepath_tmp = NULL)
 }
 \arguments{
 \item{x}{An object of class gpm or data.frame}
 
-\item{response}{The column name(s) of the response variable(s)}
-
-\item{predictor}{The column ID of the predictor, i.e. independent 
-variable(s) in the dataset}
-
-\item{resamples}{The list of the resamples containing the individual row 
-numbers (resulting from function \code{\link{resamplingsByVariable}})}
-
-\item{mode}{Variable selection mode, either recursive feature elimination 
-("rfe") or forward feature selection ("ffs)}
-
 \item{n_var}{Vector holding the number of variables used for the recursive 
 feature elimination iterations; must not be continous (e.g. c(1:10, 20, 30))}
 
-\item{response_nbr}{Response ID to be computed; only relevant if more than
-one response variable is present and a model should not be built for each of
-them}
-
-\item{resample_nbr}{Resample ID to be computed; only relevant if the model
-training should not run over all resamples}
-
 \item{mthd}{Core method used for the model (e.g. "rf" for random forest)}
+
+\item{mode}{Variable selection mode, either recursive feature elimination 
+("rfe") or forward feature selection ("ffs)}
 
 \item{seed_nbr}{Specific seed to be to ensure reproducability}
 
@@ -49,10 +36,25 @@ within each forward or backward feature selection/elimination step}
 deviation statistic ("sd", more conservative) or by the actual best number
 ("indv")}
 
+\item{response_nbr}{Response ID to be computed; only relevant if more than
+one response variable is present and a model should not be built for each of
+them}
+
+\item{resample_nbr}{Resample ID to be computed; only relevant if the model
+training should not run over all resamples}
+
 \item{filepath_tmp}{If set, intermediate model results during the variable
 selection are writen to disc; if the procedure stops for some reason, the
 already computed results can be read in again which saves computation time
 (e.g. after an accidential shutdown etc.)}
+
+\item{response}{The column name(s) of the response variable(s)}
+
+\item{predictor}{The column ID of the predictor, i.e. independent 
+variable(s) in the dataset}
+
+\item{resamples}{The list of the resamples containing the individual row 
+numbers (resulting from function \code{\link{resamplingsByVariable}})}
 }
 \value{
 NONE

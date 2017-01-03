@@ -23,6 +23,17 @@ setClass("GPMData",
          )
 )
 
+#' An S4 class to represent gpm model layers
+#'
+#' @slot model a list of model classes
+#' 
+#' @exportClass GPMModel
+#' 
+setClass("GPMModel",
+         representation(
+           model = "list"
+         )
+)
 
 #' An S4 class to represent gpm log data
 #'
@@ -41,5 +52,5 @@ setClass("GPMLog",
 #' @exportClass GPM
 #' 
 setClass("GPM", 
-         contains = c("GPMData", "GPMMeta", "GPMLog")
+         contains = c("GPMData", "GPMMeta", "GPMModel", "GPMLog")
 )         
