@@ -12,6 +12,7 @@ if ( !isGeneric("cleanPredictors") ) {
 #' @param nzv Remove (near) zero variability predictor variables
 #' @param highcor Remove highly correlated predictor variables
 #' @param cutoff Correlation cutoff value for highcor
+#' @param rmvna Remove predictors with na values
 #' 
 #' @name cleanPredictors
 #' 
@@ -47,7 +48,7 @@ NULL
 #'
 setMethod("cleanPredictors", 
           signature(x = "GPM"), 
-          function(x, nzv = TRUE, highcor = TRUE, cutoff = 0.90){
+          function(x, nzv = TRUE, highcor = TRUE, cutoff = 0.90,rmvna = TRUE){
             
             if(nzv == TRUE){
               x@meta$input$PREDICTOR_ZEROVAR <-
@@ -71,6 +72,13 @@ setMethod("cleanPredictors",
               
               x@meta$input$PREDICTOR_FINAL <- x@meta$input$PREDICTOR_FINAL[-hc]
             }
+
+            if(rmvna == TRUE){
+              ok <- grepl(0, colSums(is.na(x@data$input[, x@meta$input$PREDICTOR_FINAL])))
+              x@meta$input$PREDICTOR_RMVNA <- x@meta$input$PREDICTOR_FINAL[!ok]
+              x@meta$input$PREDICTOR_FINAL <- x@meta$input$PREDICTOR_FINAL[ok]
+            }
+            
             return(x)
           })
 

@@ -11,10 +11,10 @@
   "ffs"), seed_nbr = 11, cv_nbr = 5, var_selection = c("sd", "indv"),
   response_nbr = NULL, resample_nbr = NULL, filepath_tmp = NULL)
 
-\S4method{trainModel}{data.frame}(x, response, predictor, resamples,
-  n_var = NULL, mthd = "rf", mode = c("rfe", "ffs"), seed_nbr = 11,
-  cv_nbr = 2, var_selection = c("sd", "indv"), response_nbr = NULL,
-  resample_nbr = NULL, filepath_tmp = NULL)
+\S4method{trainModel}{data.frame}(x, response, predictor, selector, meta,
+  resamples, n_var = NULL, mthd = "rf", mode = c("rfe", "ffs"),
+  seed_nbr = 11, cv_nbr = 2, var_selection = c("sd", "indv"),
+  response_nbr = NULL, resample_nbr = NULL, filepath_tmp = NULL)
 }
 \arguments{
 \item{x}{An object of class gpm or data.frame}
@@ -52,6 +52,10 @@ already computed results can be read in again which saves computation time
 
 \item{predictor}{The column ID of the predictor, i.e. independent 
 variable(s) in the dataset}
+
+\item{selector}{Selector id}
+
+\item{meta}{Meta information of the gpm object}
 
 \item{resamples}{The list of the resamples containing the individual row 
 numbers (resulting from function \code{\link{resamplingsByVariable}})}

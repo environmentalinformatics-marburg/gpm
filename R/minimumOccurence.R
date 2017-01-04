@@ -71,14 +71,12 @@ setMethod("minimumOccurence",
 setMethod("minimumOccurence", 
           signature(x = "data.frame"), 
           function(x, selector, occurence = "yes", resample = 100, thv = 20){
-            si <- 0
+            seed <- 0
             mo <- do.call("rbind", lapply(seq(resample), function(i){
               if(i %% 10 == 0) print(paste0("Processing sample ", i, " of ", resample))
-              si <- si + 1
-              sj <- 0
               act_smpl <- do.call("rbind", lapply(unique(selector), function(j){
-                sj <- sj + 1
-                set.seed(si+sj)
+                seed <<-seed + 1
+                set.seed(seed)
                 act_plot <- sample(which(selector == j), size = 1)
                 data.frame(selector = j,
                            x[act_plot, ])

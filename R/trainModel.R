@@ -138,100 +138,106 @@ setMethod("trainModel",
                 
                 act_resample <- resamples[[i]][[j]]
                 
-                resp <- x[act_resample$training$SAMPLES, 
-                          act_resample$training$RESPONSE]
-                indp <- x[act_resample$training$SAMPLES, predictor]
-                
-                if(class(resp) == "factor"){ 
-                  metric = "Accuracy"
-                } else {
-                  #metric = "RMSE"
-                  metric = "Rsquared"
-                }
-                
-                if(mode == "rfe"){
-                  model <- try(trainModelrfe(resp = resp, indp = indp, n_var = n_var, 
-                                             mthd = mthd, seed_nbr = seed_nbr, 
-                                             cv_nbr = cv_nbr, metric = metric))
+                if(!is.null(act_resample)){
+                  resp <- x[act_resample$training$SAMPLES, 
+                            act_resample$training$RESPONSE]
+                  indp <- x[act_resample$training$SAMPLES, predictor]
                   
-                  
-                  if(!inherits(model, "try-error") & var_selection == "sd"){
-                    predictor_best <- gpm:::trainModelVarSelSD(model, 
-                                                               metric = model$metric, 
-                                                               maximize=FALSE,
-                                                               sderror=TRUE)
-                    if(class(predictor_best) != "character"){
-                      predictor_best <- as.character(names(predictor_best))
-                    }
-                    cv_splits <- caret::createFolds(resp, k=cv_nbr, returnTrain = TRUE)
-                    
-                    trCntr <- caret::trainControl(method="cv", number = cv_nbr, 
-                                                  index = cv_splits,
-                                                  returnResamp = "all",
-                                                  repeats = 1, verbose = FALSE)
-                    # savePredictions = TRUE
-                    
-                    model <- try(train(indp[, predictor_best], resp,  
-                                       metric = metric, method = mthd,
-                                       trControl = trCntr,
-                                       # tuneLength = tuneLength,
-                                       tuneGrid = lut$MTHD_DEF_LST[[mthd]]$tunegr,
-                                       verbose = FALSE))
-                  }
-                  
-                } else if (mode == "ffs"){
-                  model <- try(trainModelffs(resp = resp, indp = indp, n_var = n_var, 
-                                             mthd = mthd, seed_nbr = seed_nbr, 
-                                             cv_nbr = cv_nbr, metric = metric, 
-                                             withinSD = TRUE, runParallel = TRUE))
-                }
-                
-                train_selector <- x[act_resample$training$SAMPLES, selector]
-                train_meta <- x[act_resample$training$SAMPLES, meta]
-                training <- list(RESPONSE = resp, PREDICTOR = indp[, predictor_best],
-                                 SELECTOR = train_selector, META = train_meta)
-                
-                if(inherits(model, "try-error")){
-                  testing <- list(NA)
-                } else {
-                  
-                  test_resp <- x[act_resample$testing$SAMPLES, 
-                                 act_resample$testing$RESPONSE]
-                  test_indp <- x[act_resample$testing$SAMPLES, predictor_best]
-                  
-                  test_resp <- test_resp[complete.cases(test_indp)]
-                  test_indp <- test_indp[complete.cases(test_indp),]
-                  
-                  if(class(model) == "train"){
-                    test_pred <- data.frame(pred = predict(model, test_indp, type = "raw"))
-                    if(class(resp) == "factor"){
-                      test_pred <- cbind(test_pred, predict(model, test_indp, type = "prob"))
-                    }
-                    
-                    # if(lut$MTHD_DEF_LST[[mthd]]$type == "prob"){
-                    #   test_pred <- cbind(test_pred, predict(model, test_indp, type = "prob"))
-                    # }
+                  if(class(resp) == "factor"){ 
+                    metric = "Accuracy"
                   } else {
-                    test_pred <- predict(model, test_indp)
+                    #metric = "RMSE"
+                    metric = "Rsquared"
                   }
                   
-                  test_selector <- x[act_resample$testing$SAMPLES, selector]
-                  test_meta <- x[act_resample$testing$SAMPLES, meta]
-                  testing <-  list(RESPONSE = test_resp, PREDICTOR = test_indp,
-                                   PREDICTED = test_pred, 
-                                   SELECTOR = test_selector, META = test_meta)
+                  if(mode == "rfe"){
+                    model <- try(trainModelrfe(resp = resp, indp = indp, n_var = n_var, 
+                                               mthd = mthd, seed_nbr = seed_nbr, 
+                                               cv_nbr = cv_nbr, metric = metric))
+                    
+                    
+                    if(!inherits(model, "try-error") & var_selection == "sd"){
+                      predictor_best <- gpm:::trainModelVarSelSD(model, 
+                                                                 metric = model$metric, 
+                                                                 maximize=FALSE,
+                                                                 sderror=TRUE)
+                      if(class(predictor_best) != "character"){
+                        predictor_best <- as.character(names(predictor_best))
+                      }
+                      cv_splits <- caret::createFolds(resp, k=cv_nbr, returnTrain = TRUE)
+                      
+                      trCntr <- caret::trainControl(method="cv", number = cv_nbr, 
+                                                    index = cv_splits,
+                                                    returnResamp = "all",
+                                                    repeats = 1, verbose = FALSE)
+                      # savePredictions = TRUE
+                      
+                      model <- try(train(indp[, predictor_best], resp,  
+                                         metric = metric, method = mthd,
+                                         trControl = trCntr,
+                                         # tuneLength = tuneLength,
+                                         tuneGrid = lut$MTHD_DEF_LST[[mthd]]$tunegr,
+                                         verbose = FALSE))
+                    }
+                    
+                  } else if (mode == "ffs"){
+                    model <- try(trainModelffs(resp = resp, indp = indp, n_var = n_var, 
+                                               mthd = mthd, seed_nbr = seed_nbr, 
+                                               cv_nbr = cv_nbr, metric = metric, 
+                                               withinSD = TRUE, runParallel = TRUE))
+                  }
+                  
+                  train_selector <- x[act_resample$training$SAMPLES, selector]
+                  train_meta <- x[act_resample$training$SAMPLES, meta]
+                  training <- list(RESPONSE = resp, PREDICTOR = indp[, predictor_best],
+                                   SELECTOR = train_selector, META = train_meta)
+                  
+                  if(inherits(model, "try-error")){
+                    testing <- list(NA)
+                  } else {
+                    
+                    test_resp <- x[act_resample$testing$SAMPLES, 
+                                   act_resample$testing$RESPONSE]
+                    test_indp <- x[act_resample$testing$SAMPLES, predictor_best]
+                    
+                    test_resp <- test_resp[complete.cases(test_indp)]
+                    test_indp <- test_indp[complete.cases(test_indp),]
+                    
+                    if(class(model) == "train"){
+                      test_pred <- data.frame(pred = predict(model, test_indp, type = "raw"))
+                      if(class(resp) == "factor"){
+                        test_pred <- cbind(test_pred, predict(model, test_indp, type = "prob"))
+                      }
+                      
+                      # if(lut$MTHD_DEF_LST[[mthd]]$type == "prob"){
+                      #   test_pred <- cbind(test_pred, predict(model, test_indp, type = "prob"))
+                      # }
+                    } else {
+                      test_pred <- predict(model, test_indp)
+                    }
+                    
+                    test_selector <- x[act_resample$testing$SAMPLES, selector]
+                    test_meta <- x[act_resample$testing$SAMPLES, meta]
+                    testing <-  list(RESPONSE = test_resp, PREDICTOR = test_indp,
+                                     PREDICTED = test_pred, 
+                                     SELECTOR = test_selector, META = test_meta)
+                  }
+                  model_instances <- list(response = act_resample$testing$RESPONSE, 
+                                          model = model, training = training,
+                                          testing = testing)
+                  if(!is.null(filepath_tmp)){
+                    save(model_instances, 
+                         file = 
+                           paste0(filepath_tmp, 
+                                  sprintf("gpm_trainModel_model_instances_%03d_%03d", i, j),
+                                  ".RData"))              
+                  }
+                  return(model_instances)
+                } else {
+                  return(NULL)
                 }
-                model_instances <- list(response = act_resample$testing$RESPONSE, 
-                                        model = model, training = training,
-                                        testing = testing)
-                if(!is.null(filepath_tmp)){
-                  save(model_instances, 
-                       file = 
-                         paste0(filepath_tmp, 
-                                sprintf("gpm_trainModel_model_instances_%03d_%03d", i, j),
-                                ".RData"))              
-                }
-                return(model_instances)
+                
+
               })
               if(!is.null(filepath_tmp)){
                 save(model_instances, 

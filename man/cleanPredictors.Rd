@@ -7,7 +7,7 @@
 \title{Clean predictor variables regarding corelation and variance}
 \usage{
 \S4method{cleanPredictors}{GPM}(x, nzv = TRUE, highcor = TRUE,
-  cutoff = 0.9)
+  cutoff = 0.9, rmvna = TRUE)
 }
 \arguments{
 \item{x}{An object of class gpm}
@@ -17,6 +17,8 @@
 \item{highcor}{Remove highly correlated predictor variables}
 
 \item{cutoff}{Correlation cutoff value for highcor}
+
+\item{rmvna}{Remove predictors with na values}
 }
 \value{
 A layer within the gpm object with the information on the n 
