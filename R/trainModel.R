@@ -87,21 +87,21 @@ setMethod("trainModel",
             if(is.null(n_var)){
               n_var <- seq(length(x@meta$input$PREDICTOR_FINAL))
             }
-            x@model[paste0(mthd, "_", mode)] <- trainModel(x = x@data$input,
-                                                           response = x@meta$input$RESPONSE_FINAL,
-                                                           predictor = x@meta$input$PREDICTOR_FINAL,
-                                                           selector = x@meta$input$SELECTOR,
-                                                           meta = x@meta$input$META,
-                                                           resamples = x@meta$input$TRAIN_TEST,
-                                                           n_var = n_var,
-                                                           mthd = mthd, 
-                                                           mode = mode,
-                                                           seed_nbr = seed_nbr, 
-                                                           cv_nbr = cv_nbr,
-                                                           var_selection = var_selection,
-                                                           response_nbr = response_nbr,
-                                                           resample_nbr = resample_nbr,
-                                                           filepath_tmp = filepath_tmp)
+            x@model[[paste0(mthd, "_", mode)]] <- trainModel(x = x@data$input,
+                                                             response = x@meta$input$RESPONSE_FINAL,
+                                                             predictor = x@meta$input$PREDICTOR_FINAL,
+                                                             selector = x@meta$input$SELECTOR,
+                                                             meta = x@meta$input$META,
+                                                             resamples = x@meta$input$TRAIN_TEST,
+                                                             n_var = n_var,
+                                                             mthd = mthd, 
+                                                             mode = mode,
+                                                             seed_nbr = seed_nbr, 
+                                                             cv_nbr = cv_nbr,
+                                                             var_selection = var_selection,
+                                                             response_nbr = response_nbr,
+                                                             resample_nbr = resample_nbr,
+                                                             filepath_tmp = filepath_tmp)
             return(x)
           })
 
