@@ -13,4 +13,3 @@ Classification of remote sensing data
 not run:
 calcAtmosCorr(filepath = "Name_of_Landsat_Metadata_File")
 }
-

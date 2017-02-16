@@ -51,4 +51,3 @@ doi: 10.1080/01431161.2011.552923, available online at
 \seealso{
 \code{\link{compContingencyTable}} for compiling a contingency table.
 }
-

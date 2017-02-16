@@ -36,7 +36,7 @@ trainModelrfe <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric){
   trCntr <- caret::trainControl(method="cv", number = cv_nbr, 
                                 repeats = 1, verbose = FALSE)
   if(is.null(n_var)){
-    n_var_rfe <- seq(2, ncol(indp), 10)
+    n_var_rfe <- seq(2, ncol(indp))
   } else {
     n_var_rfe <- n_var
   }
@@ -49,5 +49,4 @@ trainModelrfe <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric){
                           tuneGrid = lut$MTHD_DEF_LST[[mthd]]$tunegr)
   return(rfe_model)
 }
-
 

@@ -34,4 +34,3 @@ Contingency tests are taken from CAWCR (http://goo.gl/BEPWOI)
 \seealso{
 NONE
 }
-

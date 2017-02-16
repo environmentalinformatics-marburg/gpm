@@ -2,8 +2,8 @@
 % Please edit documentation in R/gpm-package.R
 \docType{package}
 \name{gpm-package}
-\alias{gpm}
 \alias{gpm-package}
+\alias{gpm}
 \title{Geospatial predictive modeling using parameterized and unparameterized models}
 \description{
 Geospatial predictive modeling using parameterized and unparameterized models
@@ -18,4 +18,3 @@ Tim Appelhans, Thomas Nauss, Hanna Meyer\cr
 \emph{Maintainer:} Environmental Informatics \email{admin@environmentalinformatics-marburg.de}
 }
 \keyword{package}
-

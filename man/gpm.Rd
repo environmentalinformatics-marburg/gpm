@@ -35,4 +35,3 @@ meta <- createGPMMeta(dataset = abies_alba,
 alb <- gpm(abies_alba, meta)
 
 }
-

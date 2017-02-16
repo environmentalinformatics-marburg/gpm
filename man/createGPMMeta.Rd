@@ -49,4 +49,3 @@ NONE
 \seealso{
 \code{\link{AAAgpmClasses}} for the gpm class.
 }
-

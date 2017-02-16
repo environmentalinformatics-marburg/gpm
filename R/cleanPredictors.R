@@ -48,7 +48,7 @@ NULL
 #'
 setMethod("cleanPredictors", 
           signature(x = "GPM"), 
-          function(x, nzv = TRUE, highcor = TRUE, cutoff = 0.90,rmvna = TRUE){
+          function(x, nzv = TRUE, highcor = TRUE, cutoff = 0.90, rmvna = TRUE){
             
             if(nzv == TRUE){
               x@meta$input$PREDICTOR_ZEROVAR <-
@@ -58,7 +58,9 @@ setMethod("cleanPredictors",
               rmv <- which(x@meta$input$PREDICTOR_ZEROVAR$zeroVar == TRUE | 
                              x@meta$input$PREDICTOR_ZEROVAR$nzv == TRUE)
               
-              x@meta$input$PREDICTOR_FINAL <- x@meta$input$PREDICTOR_FINAL[-rmv]
+              if(length(rmv) > 0){
+                x@meta$input$PREDICTOR_FINAL <- x@meta$input$PREDICTOR_FINAL[-rmv]  
+              }
             }
 
             if(highcor == TRUE){

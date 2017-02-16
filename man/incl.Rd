@@ -32,4 +32,3 @@ exwin(pred_raster, training_sites_shape)
 \code{\link{compContingencyTable}} \code{\link{calcKappa}} for calculating kappa coefficients based on
 contingency tables.
 }
-

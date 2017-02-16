@@ -25,4 +25,3 @@ NONE
 \seealso{
 NONE
 }
-

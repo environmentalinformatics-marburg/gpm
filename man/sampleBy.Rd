@@ -41,4 +41,3 @@ sampleBy(meuse, col = "landuse", n = 1)
 \seealso{
 \code{\link{sample}} for details on the random sampling
 }
-

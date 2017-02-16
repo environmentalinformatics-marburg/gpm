@@ -42,4 +42,3 @@ NONE
 \seealso{
 NONE
 }
-

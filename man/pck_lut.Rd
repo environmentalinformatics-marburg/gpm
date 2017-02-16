@@ -6,4 +6,3 @@
 \description{
 Function which has been used to create the LUT data of this package.
 }
-

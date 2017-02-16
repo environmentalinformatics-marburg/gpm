@@ -84,9 +84,6 @@ setMethod("trainModel",
                    var_selection = c("sd", "indv"), 
                    response_nbr = NULL, resample_nbr = NULL,
                    filepath_tmp = NULL){
-            if(is.null(n_var)){
-              n_var <- seq(length(x@meta$input$PREDICTOR_FINAL))
-            }
             x@model[[paste0(mthd, "_", mode)]] <- trainModel(x = x@data$input,
                                                              response = x@meta$input$RESPONSE_FINAL,
                                                              predictor = x@meta$input$PREDICTOR_FINAL,

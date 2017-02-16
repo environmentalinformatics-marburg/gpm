@@ -33,4 +33,3 @@ calcKappa(contab)
 \code{\link{calcKappa}} for calculating kappa coefficients based on
 the contingency table.
 }
-

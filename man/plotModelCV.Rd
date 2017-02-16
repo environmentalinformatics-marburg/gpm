@@ -37,4 +37,3 @@ This function plots variable imporatnce for cross-validated
 \note{
 if rfe is used as model, then returnResamp = "all" must be set in rfe training
 }
-

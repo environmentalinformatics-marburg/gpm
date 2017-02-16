@@ -49,4 +49,3 @@ The function uses functions from:
 \seealso{
 NONE
 }
-
