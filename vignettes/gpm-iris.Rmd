@@ -20,7 +20,7 @@ the dataset and the corresponding meta information to the gpm class.
 ```{r}
 meta <- createGPMMeta(iris, type = "input",
                       selector = NULL, response = 5, 
-                      independent = c(1:4), meta = NULL)
+                      predictor = c(1:4), meta = NULL)
 iris_gpm <- gpm(iris, meta, scale = TRUE)
 ```
 
