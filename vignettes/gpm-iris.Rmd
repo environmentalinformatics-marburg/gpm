@@ -21,7 +21,7 @@ the dataset and the corresponding meta information to the gpm class.
 meta <- createGPMMeta(iris, type = "input",
                       selector = NULL, response = 5, 
                       predictor = c(1:4), meta = NULL)
-iris_gpm <- gpm(iris, meta, scale = TRUE)
+iris_gpm <- gpm(iris, meta)
 ```
 
 Once the gpm object has been created, it can be used as input for computing
@@ -42,7 +42,7 @@ handeld by the ``trainModel`` function.
 ```{r, message=FALSE}
 models <- trainModel(x = iris_gpm,
                      response = iris_gpm@meta$input$RESPONSE, 
-                     independent = iris_gpm@meta$input$INDEPENDENT,
+                     predictor = iris_gpm@meta$input$PREDICTOR,
                      resamples = iris_trte, 
                      n_var = c(seq(length(iris_gpm@meta$input$INDEPENDENT))),
                      mthd = "rf", 
