@@ -51,9 +51,13 @@ setMethod("cleanPredictors",
           function(x, nzv = TRUE, highcor = TRUE, cutoff = 0.90, rmvna = TRUE){
             
             if(rmvna == TRUE){
-              ok <- grepl(0, colSums(is.na(x@data$input[, x@meta$input$PREDICTOR_FINAL])))
-              x@meta$input$PREDICTOR_RMVNA <- x@meta$input$PREDICTOR_FINAL[!ok]
-              x@meta$input$PREDICTOR_FINAL <- x@meta$input$PREDICTOR_FINAL[ok]
+              x@meta$input$PREDICTOR_RMVNA <- 
+                names(which(colSums(is.na(x@data$input[, x@meta$input$PREDICTOR_FINAL])) > 0))
+              
+              na_id <- which(x@meta$input$PREDICTOR_FINAL %in% x@meta$input$PREDICTOR_RMVNA)
+              if(length(na_id) > 0){
+                x@meta$input$PREDICTOR_FINAL <- x@meta$input$PREDICTOR_FINAL[-na_id]  
+              }
             }            
             
             if(nzv == TRUE){
