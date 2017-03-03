@@ -50,6 +50,12 @@ setMethod("cleanPredictors",
           signature(x = "GPM"), 
           function(x, nzv = TRUE, highcor = TRUE, cutoff = 0.90, rmvna = TRUE){
             
+            if(rmvna == TRUE){
+              ok <- grepl(0, colSums(is.na(x@data$input[, x@meta$input$PREDICTOR_FINAL])))
+              x@meta$input$PREDICTOR_RMVNA <- x@meta$input$PREDICTOR_FINAL[!ok]
+              x@meta$input$PREDICTOR_FINAL <- x@meta$input$PREDICTOR_FINAL[ok]
+            }            
+            
             if(nzv == TRUE){
               x@meta$input$PREDICTOR_ZEROVAR <-
                 nearZeroVar(x@data$input[, x@meta$input$PREDICTOR_FINAL], 
@@ -75,12 +81,6 @@ setMethod("cleanPredictors",
               x@meta$input$PREDICTOR_FINAL <- x@meta$input$PREDICTOR_FINAL[-hc]
             }
 
-            if(rmvna == TRUE){
-              ok <- grepl(0, colSums(is.na(x@data$input[, x@meta$input$PREDICTOR_FINAL])))
-              x@meta$input$PREDICTOR_RMVNA <- x@meta$input$PREDICTOR_FINAL[!ok]
-              x@meta$input$PREDICTOR_FINAL <- x@meta$input$PREDICTOR_FINAL[ok]
-            }
-            
             return(x)
           })
 
