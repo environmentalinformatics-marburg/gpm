@@ -90,13 +90,17 @@ compVarImp <- function(models, scale = FALSE){
     
     # n <- length(vi_species1)
     vi_species <- do.call("rbind", vi_species1)
-    # max_imp <- max(vi_species$IMPORTANCE)
-    # vi_species$IMPORTANCE <- vi_species$IMPORTANCE / max_imp
-    vi_count <- vi_species %>% count(VARIABLE)
-    vi_mean <- vi_species %>% group_by(VARIABLE) %>% summarise(mean = mean(IMPORTANCE))
-    vi <- merge(vi_count, vi_mean)
-    vi$RESPONSE <- vi_species$RESPONSE[1]
-    vi <- vi[order(vi$mean, decreasing = TRUE), ,drop = FALSE]
+    if(is.null(vi_species)){
+      vi <- NULL
+    } else {
+      # max_imp <- max(vi_species$IMPORTANCE)
+      # vi_species$IMPORTANCE <- vi_species$IMPORTANCE / max_imp
+      vi_count <- vi_species %>% count(VARIABLE)
+      vi_mean <- vi_species %>% group_by(VARIABLE) %>% summarise(mean = mean(IMPORTANCE))
+      vi <- merge(vi_count, vi_mean)
+      vi$RESPONSE <- vi_species$RESPONSE[1]
+      vi <- vi[order(vi$mean, decreasing = TRUE), ,drop = FALSE]
+    }
     return(vi)
   })
 }

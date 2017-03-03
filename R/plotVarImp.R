@@ -30,13 +30,18 @@
 #'
 plotVarImp <- function(var_imp){
   lapply(var_imp, function(x){
-    plot_var_imp <- data.frame(OVERALL = x$mean)
-    rownames(plot_var_imp) <- x$VARIABLE
-    
-    v_imp_varsel <- list(importance = plot_var_imp,
-                         model = "loess r-squared",
-                         calledFrom = "varImp")
-    class(v_imp_varsel) <- "varImp.train"
-    var_imp_plot <- plot(v_imp_varsel, main = as.character(x$RESPONSE[1]))
+    if(is.null(x)){
+      var_imp_plot <- NULL
+    } else {
+      plot_var_imp <- data.frame(OVERALL = x$mean)
+      rownames(plot_var_imp) <- x$VARIABLE
+      
+      v_imp_varsel <- list(importance = plot_var_imp,
+                           model = "loess r-squared",
+                           calledFrom = "varImp")
+      class(v_imp_varsel) <- "varImp.train"
+      var_imp_plot <- plot(v_imp_varsel, main = as.character(x$RESPONSE[1]))      
+    }
+    return(var_imp_plot)
   })
-}
+} 
