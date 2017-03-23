@@ -51,7 +51,7 @@ pck_lut <- function(){
     pls = list(fncs = caretFuncs,
                tunegr = NULL,
                type = "skip"), #expand.grid(.ncomp = seq(1, 8, 1))),
-    rf = list(fncs = rfFuncs,
+    rf = list(fncs = caretFuncs,
               tunegr = expand.grid(.mtry = seq(2, 8, 1)),
               type = "prob"),
     svmLinear = list(fncs = caretFuncs,
