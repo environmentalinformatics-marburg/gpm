@@ -82,6 +82,7 @@ setMethod("trainModel",
                    mthd = "rf", mode = c("rfe", "ffs"),
                    seed_nbr = 11, cv_nbr = 5,
                    var_selection = c("sd", "indv"), 
+                   metric = NULL,
                    response_nbr = NULL, resample_nbr = NULL,
                    filepath_tmp = NULL){
             x@model[[paste0(mthd, "_", mode)]] <- trainModel(x = x@data$input,
@@ -96,6 +97,7 @@ setMethod("trainModel",
                                                              seed_nbr = seed_nbr, 
                                                              cv_nbr = cv_nbr,
                                                              var_selection = var_selection,
+                                                             metric = metric,
                                                              response_nbr = response_nbr,
                                                              resample_nbr = resample_nbr,
                                                              filepath_tmp = filepath_tmp)
@@ -115,6 +117,7 @@ setMethod("trainModel",
                    n_var = NULL, mthd = "rf", 
                    mode = c("rfe", "ffs"), seed_nbr = 11, 
                    cv_nbr = 2, var_selection = c("sd", "indv"),
+                   metric = NULL, 
                    response_nbr = NULL, resample_nbr = NULL, 
                    filepath_tmp = NULL){
             mode <- mode[1]
@@ -140,11 +143,14 @@ setMethod("trainModel",
                             act_resample$training$RESPONSE]
                   indp <- x[act_resample$training$SAMPLES, predictor]
                   
-                  if(class(resp) == "factor"){ 
-                    metric = "Accuracy"
-                  } else {
-                    #metric = "RMSE"
-                    metric = "Rsquared"
+                  if(is.null(metric)){
+                    if(class(resp) == "factor"){ 
+                      metric = "Accuracy"
+                      # metric = "Kappa"
+                    } else {
+                      metric = "RMSE"
+                      # metric = "Rsquared"
+                    }
                   }
                   
                   if(mode == "rfe"){
