@@ -1,0 +1,18 @@
+Package: gpm
+Type: Package
+Title: Geospatial predictive modeling using parameterized and
+        unparameterized models.
+Version: 0.1.1
+Date: 2015-06-08
+Author: Environmentalinformatics Marburg
+Maintainer: Tim Appelhans <tim.appelhans@gmail.com>
+Description: This package provides convenience functions for geospatial
+    predictive modeling of raster and saetllite data.
+License: GPL-3
+Depends: caret, gridExtra, latticeExtra, raster, satellite, plyr, dplyr
+Imports: tools
+Suggests: testthat, knitr, rmarkdown
+LazyData: true
+VignetteBuilder: knitr
+RoxygenNote: 6.0.1
+Built: R 3.3.2; ; 2017-03-30 07:31:19 UTC; windows

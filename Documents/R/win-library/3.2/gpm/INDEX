@@ -1,0 +1,52 @@
+GPM-class               An S4 class to represent a complete gmp dataset
+GPMData-class           An S4 class to represent gpm data layers
+GPMLog-class            An S4 class to represent gpm log data
+GPMMeta-class           An S4 class to represent gpm metadata
+                        information
+GPMModel-class          An S4 class to represent gpm model layers
+classifyData            Classification of remote sensing data
+cleanPredictors         Clean predictor variables regarding corelation
+                        and variance
+compContTests           Compute contingency tests for all model
+                        responses
+compRegrTests           Compute regression tests over all model
+                        responses
+compVarImp              Compute variable importance over all model
+                        responses and resamplings
+createGPMMeta           Create a meta information dataset in gpm format
+gpm                     Create a gpm object
+gpm-package             Geospatial predictive modeling using
+                        parameterized and unparameterized models
+gpmInfo                 Get or access gpm object information used by
+                        various functions
+helpCalcConTab          Compute contingency table
+helpCalcKappa           Calculate various kappa coefficients
+helpStandardError       Calculate the standard error of the mean
+imputeData              Impute missing data
+incl                    Compute similarity index
+lutInfo                 Get or access internal LUT values used by
+                        various functions
+minimumOccurence        Select features based on minimum occurence
+                        across unique locations
+pck_lut                 Function used to create sysdata.rda (i.e. LUT)
+plotClassPerformance    Plot performance of a classification model
+plotModelCV             Plot cross-validated variable importance
+plotVarImp              Plot mean variable importance over all model
+                        responses
+plotVarImpHeatmap       Plot mean variable importance over all model
+                        responses as heatmap
+resamplingsByVariable   Create identical samples or resample by
+                        specific selector variable
+sampleBy                sample a Spatial*DataFrame by according to a
+                        factorial column
+splitMultResp           Split dataset into testing and training samples
+                        individually for each response variable
+splitMultRespLSO        Split dataset into testing and training samples
+                        individually for each response variable
+                        following a leave selector out strategy.
+trainModel              Model training and performance using
+                        cross-validation
+trainModelVarSelSD      Extract cross-validated important variables
+trainModelffs           Train machine learning model using forward
+                        feature selection
+trainModelrfe           Train machine learning model

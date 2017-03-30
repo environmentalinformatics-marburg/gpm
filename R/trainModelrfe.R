@@ -23,30 +23,43 @@
 #' 
 #' @rdname trainModelrfe
 #'
-trainModelrfe <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric){
+trainModelrfe <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric,
+                          tune_length = NULL){
   set.seed(seed_nbr)
   cv_splits <- caret::createFolds(resp, k=cv_nbr, returnTrain = TRUE)
-  
   rfeCntrl <- caret::rfeControl(functions = lut$MTHD_DEF_LST[[mthd]]$fncs,
-                                method="boot", index = cv_splits,
+                                method="cv", index = cv_splits,
                                 returnResamp = "all",
                                 verbose = FALSE,
                                 rerank=FALSE)
   
-  trCntr <- caret::trainControl(method="cv", number = cv_nbr, 
-                                repeats = 1, verbose = FALSE)
+  set.seed(seed_nbr)
+  trCntr <- caret::trainControl(method="repeatedcv", number = cv_nbr, 
+                                repeats = 2, verbose = FALSE)
   if(is.null(n_var)){
     n_var_rfe <- seq(2, ncol(indp))
   } else {
     n_var_rfe <- n_var
   }
   
-  rfe_model <- caret::rfe(indp, resp,
-                          metric = metric, method = mthd, 
-                          sizes = n_var_rfe,
-                          rfeControl = rfeCntrl,
-                          trControl = trCntr, verbose = TRUE,
-                          tuneGrid = lut$MTHD_DEF_LST[[mthd]]$tunegr)
+  if(is.null(tune_length)){
+    set.seed(seed_nbr)
+    rfe_model <- caret::rfe(indp, resp,
+                            metric = metric, method = mthd, 
+                            sizes = n_var_rfe,
+                            rfeControl = rfeCntrl,
+                            trControl = trCntr, verbose = TRUE,
+                            tuneGrid = lut$MTHD_DEF_LST[[mthd]]$tunegr)
+  } else {
+    set.seed(seed_nbr)
+    rfe_model <- caret::rfe(indp, resp,
+                            metric = metric, method = mthd, 
+                            sizes = n_var_rfe,
+                            rfeControl = rfeCntrl,
+                            trControl = trCntr, verbose = TRUE,
+                            tuneLength = tune_length)
+  }
+  
   return(rfe_model)
 }
 

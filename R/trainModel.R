@@ -30,6 +30,9 @@ if ( !isGeneric("trainModel") ) {
 #' training should not run over all resamples 
 #' @param mthd Core method used for the model (e.g. "rf" for random forest)
 #' @param seed_nbr Specific seed to be to ensure reproducability
+#' @param tune_length Tune length to be used in recursive feature elimination
+#' (if NULL, the fixed default grid taken from the GPM LUT will be used).
+#' @param metric The metric to be used to compute the model performance.
 #' @param cv_nbr Specific cross validation folds to be used for model tuning 
 #' within each forward or backward feature selection/elimination step
 #' @param var_selection Select final number of variables based on a standard
@@ -82,7 +85,7 @@ setMethod("trainModel",
                    mthd = "rf", mode = c("rfe", "ffs"),
                    seed_nbr = 11, cv_nbr = 5,
                    var_selection = c("sd", "indv"), 
-                   metric = NULL,
+                   metric = NULL, tune_length = NULL,
                    response_nbr = NULL, resample_nbr = NULL,
                    filepath_tmp = NULL){
             x@model[[paste0(mthd, "_", mode)]] <- trainModel(x = x@data$input,
@@ -98,6 +101,7 @@ setMethod("trainModel",
                                                              cv_nbr = cv_nbr,
                                                              var_selection = var_selection,
                                                              metric = metric,
+                                                             tune_length = tune_length,
                                                              response_nbr = response_nbr,
                                                              resample_nbr = resample_nbr,
                                                              filepath_tmp = filepath_tmp)
@@ -117,7 +121,7 @@ setMethod("trainModel",
                    n_var = NULL, mthd = "rf", 
                    mode = c("rfe", "ffs"), seed_nbr = 11, 
                    cv_nbr = 2, var_selection = c("sd", "indv"),
-                   metric = NULL, 
+                   metric = NULL, tune_length = NULL,
                    response_nbr = NULL, resample_nbr = NULL, 
                    filepath_tmp = NULL){
             mode <- mode[1]
@@ -156,7 +160,8 @@ setMethod("trainModel",
                   if(mode == "rfe"){
                     model <- try(trainModelrfe(resp = resp, indp = indp, n_var = n_var, 
                                                mthd = mthd, seed_nbr = seed_nbr, 
-                                               cv_nbr = cv_nbr, metric = metric))
+                                               cv_nbr = cv_nbr, metric = metric,
+                                               tune_length = tune_length))
                     
                     
                     if(!inherits(model, "try-error") & var_selection == "sd"){
