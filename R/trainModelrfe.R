@@ -27,7 +27,17 @@ trainModelrfe <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric,
                           tune_length = NULL){
   set.seed(seed_nbr)
   cv_splits <- caret::createFolds(resp, k=cv_nbr, returnTrain = TRUE)
-  rfeCntrl <- caret::rfeControl(functions = lut$MTHD_DEF_LST[[mthd]]$fncs,
+  
+  
+  rfecntrl_functions <-  lut$MTHD_DEF_LST[[mthd]]$fncs
+  if(mthd == "rf"){
+    rfecntrl_functions <- caret::rfFuncs 
+    rfecntrl_functions$fit <- function (x, y, first, last, ...) train(x, y, ..., importance = TRUE)
+  } else {
+    rfecntrl_functions <-  lut$MTHD_DEF_LST[[mthd]]$fncs
+  }
+  
+  rfeCntrl <- caret::rfeControl(functions = rfecntrl_functions,
                                 method="cv", index = cv_splits,
                                 returnResamp = "all",
                                 verbose = FALSE,
