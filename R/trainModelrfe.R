@@ -31,10 +31,7 @@ trainModelrfe <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric,
   
   rfecntrl_functions <-  lut$MTHD_DEF_LST[[mthd]]$fncs
   if(mthd == "rf"){
-    rfecntrl_functions <- caret::rfFuncs 
-    rfecntrl_functions$fit <- function (x, y, first, last, ...) train(x, y, ..., importance = TRUE)
-  } else {
-    rfecntrl_functions <-  lut$MTHD_DEF_LST[[mthd]]$fncs
+    rfecntrl_functions$fit <- function (x, y, first, last, ...) train(x, y, importance = TRUE, ...)
   }
   
   rfeCntrl <- caret::rfeControl(functions = rfecntrl_functions,
@@ -46,6 +43,7 @@ trainModelrfe <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric,
   set.seed(seed_nbr)
   trCntr <- caret::trainControl(method="repeatedcv", number = cv_nbr, 
                                 repeats = 2, verbose = FALSE)
+  
   if(is.null(n_var)){
     n_var_rfe <- seq(2, ncol(indp))
   } else {
