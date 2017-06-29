@@ -4,7 +4,8 @@
 \alias{trainModelrfe}
 \title{Train machine learning model}
 \usage{
-trainModelrfe(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric)
+trainModelrfe(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric,
+  tune_length = NULL)
 }
 \arguments{
 \item{NONE}{}

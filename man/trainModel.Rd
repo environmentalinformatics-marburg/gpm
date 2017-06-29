@@ -9,12 +9,14 @@
 \usage{
 \S4method{trainModel}{GPM}(x, n_var = NULL, mthd = "rf", mode = c("rfe",
   "ffs"), seed_nbr = 11, cv_nbr = 5, var_selection = c("sd", "indv"),
-  response_nbr = NULL, resample_nbr = NULL, filepath_tmp = NULL)
+  metric = NULL, tune_length = NULL, response_nbr = NULL,
+  resample_nbr = NULL, filepath_tmp = NULL, ...)
 
 \S4method{trainModel}{data.frame}(x, response, predictor, selector, meta,
   resamples, n_var = NULL, mthd = "rf", mode = c("rfe", "ffs"),
   seed_nbr = 11, cv_nbr = 2, var_selection = c("sd", "indv"),
-  response_nbr = NULL, resample_nbr = NULL, filepath_tmp = NULL)
+  metric = NULL, tune_length = NULL, response_nbr = NULL,
+  resample_nbr = NULL, filepath_tmp = NULL, ...)
 }
 \arguments{
 \item{x}{An object of class gpm or data.frame}
@@ -36,6 +38,11 @@ within each forward or backward feature selection/elimination step}
 deviation statistic ("sd", more conservative) or by the actual best number
 ("indv")}
 
+\item{metric}{The metric to be used to compute the model performance.}
+
+\item{tune_length}{Tune length to be used in recursive feature elimination
+(if NULL, the fixed default grid taken from the GPM LUT will be used).}
+
 \item{response_nbr}{Response ID to be computed; only relevant if more than
 one response variable is present and a model should not be built for each of
 them}
@@ -47,6 +54,8 @@ training should not run over all resamples}
 selection are writen to disc; if the procedure stops for some reason, the
 already computed results can be read in again which saves computation time
 (e.g. after an accidential shutdown etc.)}
+
+\item{...}{Additional arguments passed to \code{\link{trainModelffs}}.}
 
 \item{response}{The column name(s) of the response variable(s)}
 

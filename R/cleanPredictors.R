@@ -4,9 +4,8 @@ if ( !isGeneric("cleanPredictors") ) {
 }
 #' Clean predictor variables regarding corelation and variance
 #'
-#' @description 
-#' Clean predictor variables regarding zero or near-zero variability or highly 
-#' correlated variables.
+#' @description Clean predictor variables regarding zero or near-zero variability
+#' or highly correlated variables.
 #' 
 #' @param x An object of class gpm
 #' @param nzv Remove (near) zero variability predictor variables
