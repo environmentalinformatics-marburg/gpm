@@ -130,6 +130,9 @@ setMethod("trainModel",
             var_selection <- var_selection[1]
             predictor_best <- predictor
             
+            if (!is.null(filepath_tmp))
+              filepath_tmp <- file.path(filepath_tmp, "")
+            
             if(is.null(response_nbr)){
               response_nbr <- seq(length(response))
             }
