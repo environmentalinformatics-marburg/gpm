@@ -42,6 +42,7 @@ if ( !isGeneric("trainModel") ) {
 #' selection are writen to disc; if the procedure stops for some reason, the
 #' already computed results can be read in again which saves computation time
 #' (e.g. after an accidential shutdown etc.)
+#' @param ... Additional arguments passed to \code{\link{trainModelffs}}.
 #' 
 #' @return NONE
 #'
@@ -87,7 +88,7 @@ setMethod("trainModel",
                    var_selection = c("sd", "indv"), 
                    metric = NULL, tune_length = NULL,
                    response_nbr = NULL, resample_nbr = NULL,
-                   filepath_tmp = NULL){
+                   filepath_tmp = NULL, ...){
             x@model[[paste0(mthd, "_", mode)]] <- trainModel(x = x@data$input,
                                                              response = x@meta$input$RESPONSE_FINAL,
                                                              predictor = x@meta$input$PREDICTOR_FINAL,
@@ -104,7 +105,8 @@ setMethod("trainModel",
                                                              tune_length = tune_length,
                                                              response_nbr = response_nbr,
                                                              resample_nbr = resample_nbr,
-                                                             filepath_tmp = filepath_tmp)
+                                                             filepath_tmp = filepath_tmp, 
+                                                             ...)
             return(x)
           })
 
@@ -123,10 +125,13 @@ setMethod("trainModel",
                    cv_nbr = 2, var_selection = c("sd", "indv"),
                    metric = NULL, tune_length = NULL,
                    response_nbr = NULL, resample_nbr = NULL, 
-                   filepath_tmp = NULL){
+                   filepath_tmp = NULL, ...){
             mode <- mode[1]
             var_selection <- var_selection[1]
             predictor_best <- predictor
+            
+            if (!is.null(filepath_tmp))
+              filepath_tmp <- file.path(filepath_tmp, "")
             
             if(is.null(response_nbr)){
               response_nbr <- seq(length(response))
@@ -192,7 +197,7 @@ setMethod("trainModel",
                     model <- try(trainModelffs(resp = resp, indp = indp, n_var = n_var, 
                                                mthd = mthd, seed_nbr = seed_nbr, 
                                                cv_nbr = cv_nbr, metric = metric, 
-                                               withinSD = TRUE, runParallel = TRUE))
+                                               withinSD = TRUE, ...))
                   }
                   
                   train_selector <- x[act_resample$training$SAMPLES, selector]
