@@ -25,8 +25,8 @@ A layer within the gpm object with the information on the n
 individual resamplings.
 }
 \description{
-Clean predictor variables regarding zero or near-zero variability or highly 
-correlated variables.
+Clean predictor variables regarding zero or near-zero variability
+or highly correlated variables.
 }
 \details{
 The function is realized by using the caret::nearZeroVar and
