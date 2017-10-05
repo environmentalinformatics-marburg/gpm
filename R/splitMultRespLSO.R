@@ -95,8 +95,8 @@ setMethod("splitMultRespLSO",
                                                resample = lslc)
             fs <- lapply(response, function(i){
               idv <- lapply(seq(length(resamples)), function(j){
-                training = list(SAMPLES = as.numeric(resamples[[j]][-which(x[resamples[[j]], selector] == smpl[[j]])]), RESPONSE = i)
-                testing = list(SAMPLES = as.numeric(resamples[[j]][which(x[resamples[[j]], selector] == smpl[[j]])]), RESPONSE = i)
+                training = list(SAMPLES = as.numeric(resamples[[j]][-which(x[resamples[[j]], selector] %in% smpl[[j]])]), RESPONSE = i)
+                testing = list(SAMPLES = as.numeric(resamples[[j]][which(x[resamples[[j]], selector] %in% smpl[[j]])]), RESPONSE = i)
                 return(list(training = training, testing = testing))
               })
             })

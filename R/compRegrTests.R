@@ -36,7 +36,7 @@ compRegrTests <- function(models, per_model = TRUE, per_selector = FALSE,
   if(per_model == TRUE){
     lst_models <- lapply(models, function(m){
       lst_per_predictor <- lapply(m, function(r){
-        if(is.na(r$testing[[1]])){
+        if(all(is.na(r$testing[[1]]))){
           lpp <- NULL
         } else {
           if(class(r$testing$PREDICTED) == "data.frame"){
