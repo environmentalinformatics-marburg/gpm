@@ -40,6 +40,10 @@ compVarImp <- function(models, scale = FALSE){
         NULL
       } else {
         vi <- caret::varImp(y$model)
+        class(vi)
+        if(inherits(vi, "varImp.train")){
+        vi = vi$importance
+        }
         if(scale == TRUE){
           vi <- vi / max(vi)
         }
