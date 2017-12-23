@@ -45,9 +45,10 @@ setMethod("gpm",
             }
             if(scale == TRUE){
               for(i in meta$PREDICTOR){
-                a = (maxnew - minnew)/(max(x[,i], na.rm = TRUE) - min(x[,i], na.rm = TRUE))
-                b <- maxnew - a * max(x[,i], na.rm = TRUE)
-                x[,i] <- a * x[,i] + b
+                x[,i] = scale(x[,i], center = TRUE, scale = TRUE)
+                # a = (maxnew - minnew)/(max(x[,i], na.rm = TRUE) - min(x[,i], na.rm = TRUE))
+                # b <- maxnew - a * max(x[,i], na.rm = TRUE)
+                # x[,i] <- a * x[,i] + b
               }
             }
             data <- list(x)
