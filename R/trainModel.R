@@ -88,7 +88,8 @@ setMethod("trainModel",
                    var_selection = c("sd", "indv"), 
                    metric = NULL, tune_length = NULL,
                    response_nbr = NULL, resample_nbr = NULL,
-                   filepath_tmp = NULL, ...){
+                   filepath_tmp = NULL,
+                   rerank = FALSE, ...){
             x@model[[paste0(mthd, "_", mode)]] <- trainModel(x = x@data$input,
                                                              response = x@meta$input$RESPONSE_FINAL,
                                                              predictor = x@meta$input$PREDICTOR_FINAL,
@@ -125,7 +126,7 @@ setMethod("trainModel",
                    cv_nbr = 2, var_selection = c("sd", "indv"),
                    metric = NULL, tune_length = NULL,
                    response_nbr = NULL, resample_nbr = NULL, 
-                   filepath_tmp = NULL, ...){
+                   filepath_tmp = NULL, rerank = FALSE,...){
             mode <- mode[1]
             var_selection <- var_selection[1]
             predictor_best <- predictor
@@ -166,7 +167,8 @@ setMethod("trainModel",
                     model <- try(trainModelrfe(resp = resp, indp = indp, n_var = n_var, 
                                                mthd = mthd, seed_nbr = seed_nbr, 
                                                cv_nbr = cv_nbr, metric = metric,
-                                               tune_length = tune_length))
+                                               tune_length = tune_length,
+                                               rerank = rerank))
                     
                     
                     if(!inherits(model, "try-error") & var_selection == "sd"){

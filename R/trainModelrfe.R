@@ -24,7 +24,7 @@
 #' @rdname trainModelrfe
 #'
 trainModelrfe <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric,
-                          tune_length = NULL){
+                          tune_length = NULL, rerank = FALSE){
   set.seed(seed_nbr)
   cv_splits <- caret::createFolds(resp, k=cv_nbr, returnTrain = TRUE)
   
@@ -38,7 +38,7 @@ trainModelrfe <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric,
                                 method="cv", index = cv_splits,
                                 returnResamp = "all",
                                 verbose = FALSE,
-                                rerank=FALSE)
+                                rerank=rerank)
   
   set.seed(seed_nbr)
   trCntr <- caret::trainControl(method="repeatedcv", number = cv_nbr, 
