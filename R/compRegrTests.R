@@ -73,6 +73,8 @@ compRegrTests <- function(models, per_model = TRUE, per_selector = FALSE,
                 substr(s, sub_selectors[1], sub_selectors[2])]
             
             smmry <- summary(lm(pred~resp))
+            rmse = sqrt(mean((pred - resp)**2))
+            rmse_norm = rmse / mean(resp)
             data.frame(model_response = 
                          lst_per_predictor$model_response[
                            substr(lst_per_predictor$model_selector,
@@ -84,7 +86,9 @@ compRegrTests <- function(models, per_model = TRUE, per_selector = FALSE,
                        pairs = length(pred),
                        r_squared = smmry$r.squared,
                        adj_r_squared = smmry$adj.r.squared,
-                       residuals = smmry$residuals)
+                       residuals = smmry$residuals,
+                       rmse = rmse,
+                       rmse_norm = rmse_norm)
           })
           lst <- do.call("rbind", lst_per_selector)
         } else {
@@ -92,9 +96,13 @@ compRegrTests <- function(models, per_model = TRUE, per_selector = FALSE,
             if(!is.null(lst_per_predictor[[s]])){
               smmry <- summary(lm(lst_per_predictor[[s]]$testing_predicted ~ 
                                     lst_per_predictor[[s]]$testing_response))
+              rmse = sqrt(mean((lst_per_predictor[[s]]$testing_predicted - lst_per_predictor[[s]]$testing_response)**2))
+              rmse_norm = rmse / mean(lst_per_predictor[[s]]$testing_response)
               lst_per_predictor[[s]]$r_squared <- smmry$r.squared
               lst_per_predictor[[s]]$adj_r_squared <- smmry$adj.r.squared
               lst_per_predictor[[s]]$residuals <- smmry$residuals
+              lst_per_predictor[[s]]$rmse <- rmse
+              lst_per_predictor[[s]]$rmse_norm <- rmse_norm
               lst_per_predictor[[s]]$sample <- s
             }
             return(lst_per_predictor[[s]])
@@ -127,10 +135,12 @@ compRegrTests <- function(models, per_model = TRUE, per_selector = FALSE,
         if(class(r$testing$PREDICTED) == "data.frame"){
           r$testing$PREDICTED <- r$testing$PREDICTED[,1]
         }
+        rmse = sqrt(mean((r$testing$PREDICTED - r$testing$RESPONSE)**2))
+        rmse_norm = rmse / mean(r$testing$RESPONSE)
         smmry <- summary(lm(r$testing$PREDICTED ~ r$testing$RESPONSE))
         plot(r$testing$PREDICTED ~ r$testing$RESPONSE)
-        R2 <- smmry$r.squared
-        data.frame(R2 = R2)
+        r_squared <- smmry$r.squared
+        data.frame(r_squared = r_squared, rmse = rmse, rmse_norm = rmse_norm)
       })
       return(do.call("rbind", lst_subruns))
     })
