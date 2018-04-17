@@ -196,10 +196,27 @@ setMethod("trainModel",
                     }
                     
                   } else if (mode == "ffs"){
-                    model <- try(trainModelffs(resp = resp, indp = indp, n_var = n_var, 
-                                               mthd = mthd, seed_nbr = seed_nbr, 
-                                               cv_nbr = cv_nbr, metric = metric, 
-                                               withinSD = TRUE, ...))
+                    #model <- try(trainModelffs(resp = resp, indp = indp, n_var = n_var, 
+                    #                           mthd = mthd, seed_nbr = seed_nbr, 
+                    #                           cv_nbr = cv_nbr, metric = metric, 
+                    #                           withinSD = TRUE, ...))
+                    
+                    
+                    cv_splits <- caret::createFolds(resp, k=cv_nbr, returnTrain = TRUE)
+                    
+                    trCntr <- caret::trainControl(method="cv", number = cv_nbr, 
+                                                  index = cv_splits,
+                                                  returnResamp = "all",
+                                                  repeats = 1, verbose = FALSE)
+                    
+                    
+                    model <- try(CAST::ffs(indp[, predictor_best], resp,  
+                                           metric = metric, method = mthd,
+                                           trControl = trCntr,
+                                           # tuneLength = tuneLength,
+                                           tuneGrid = lut$MTHD_DEF_LST[[mthd]]$tunegr, ...))
+                    
+                    
                   }
                   
                   train_selector <- x[act_resample$training$SAMPLES, selector]

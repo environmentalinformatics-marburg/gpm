@@ -16,7 +16,8 @@ Depends:
     raster,
     satellite,
     plyr,
-    dplyr
+    dplyr,
+    CAST
 Imports:
     tools
 Suggests:

@@ -20,9 +20,9 @@
 #' passed here.
 #' @return A list of class train
 #' 
-#' @name trainModelffs
+#' @name deprecated_trainModelffs
 #' 
-#' @export trainModelffs
+#' @export deprecated_trainModelffs
 #' 
 #' @details Models with two predictors are first trained using all possible 
 #' pairs of predictor variables. The best model of these initial models is kept.
@@ -51,9 +51,9 @@
 #' # Not run
 #' 
 #' 
-#' @rdname trainModelffs
+#' @rdname deprecated_trainModelffs
 #'
-trainModelffs <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric,
+deprecated_trainModelffs <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric,
                           withinSD = TRUE, runParallel = TRUE){
 
   if(is.null(n_var)){

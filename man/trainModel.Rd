@@ -10,13 +10,13 @@
 \S4method{trainModel}{GPM}(x, n_var = NULL, mthd = "rf", mode = c("rfe",
   "ffs"), seed_nbr = 11, cv_nbr = 5, var_selection = c("sd", "indv"),
   metric = NULL, tune_length = NULL, response_nbr = NULL,
-  resample_nbr = NULL, filepath_tmp = NULL, ...)
+  resample_nbr = NULL, filepath_tmp = NULL, rerank = FALSE, ...)
 
 \S4method{trainModel}{data.frame}(x, response, predictor, selector, meta,
   resamples, n_var = NULL, mthd = "rf", mode = c("rfe", "ffs"),
   seed_nbr = 11, cv_nbr = 2, var_selection = c("sd", "indv"),
   metric = NULL, tune_length = NULL, response_nbr = NULL,
-  resample_nbr = NULL, filepath_tmp = NULL, ...)
+  resample_nbr = NULL, filepath_tmp = NULL, rerank = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class gpm or data.frame}
