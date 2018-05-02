@@ -101,6 +101,8 @@ setMethod("splitMultRespLSO",
               })
             })
             
+            
+            
             training_smpls <- lapply(seq(length(fs)), function(i){
               idv <- lapply(fs[[i]], function(j){
                 if(is.null(j)){
