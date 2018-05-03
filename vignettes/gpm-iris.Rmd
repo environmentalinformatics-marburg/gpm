@@ -13,13 +13,16 @@ example, the iris dataset is used.
 ```{r, warning=FALSE, message=FALSE, results="hide"}
 library(gpm)
 head(iris)
+iris$Plots = paste0(c("a", "b", "c", "d", "e"), sample(seq(30), nrow(iris), replace = TRUE))
+iris$SelCat = substr(iris$Plots, 1, 1)
+iris$SelNbr = as.numeric(substr(iris$Plots, 2, nchar(iris$Plots)))
 ```
 
 First, the gpm object is created by defining meta information and then adding
 the dataset and the corresponding meta information to the gpm class.
 ```{r}
 meta <- createGPMMeta(iris, type = "input",
-                      selector = NULL, response = 5, 
+                      selector = which(names(iris) %in% c("SelCat", "SelNbr")), response = 5, 
                       predictor = c(1:4), meta = NULL)
 iris_gpm <- gpm(iris, meta)
 ```
@@ -27,29 +30,31 @@ iris_gpm <- gpm(iris, meta)
 Once the gpm object has been created, it can be used as input for computing
 resamples and splitting the resamples into test and training datasets afterwards.
 ```{r}
-iris_resamples <- resamplingsByVariable(x = iris_gpm@data$input, 
-                                        resample = 20, 
-                                        use_selector = "FALSE")
+iris_gpm = createIndexFolds(x = iris_gpm, nbr = 1)
 
-iris_trte <- splitMultResp(x = iris_gpm@data$input, 
-                           response = iris_gpm@meta$input$RESPONSE,
-                           resamples = iris_resamples,
-                           p = 0.90)
+
+
+iris_gpm <- splitMultRespLSO(x = iris_gpm, nbr = 1)
+
+iris_gpm <- resamplingsByVariable(x = iris_gpm, 
+                                  resample = 2, 
+                                  use_selector = "FALSE")
+
+iris_gpm <- splitMultRespL(x = iris_gpm, 
+                          p = 0.90)
 ```
 
 Once the resampling has been defined, the model tuning and feature selection is
 handeld by the ``trainModel`` function.
 ```{r, message=FALSE}
-models <- trainModel(x = iris_gpm,
-                     response = iris_gpm@meta$input$RESPONSE, 
-                     predictor = iris_gpm@meta$input$PREDICTOR,
-                     resamples = iris_trte, 
-                     n_var = c(seq(length(iris_gpm@meta$input$INDEPENDENT))),
-                     mthd = "rf", 
-                     seed_nbr = 1, 
-                     cv_nbr = 5,
-                     var_selection = "indv",
-                     filepath_tmp = NULL)
+iris_gpm = trainModel(x = iris_gpm,
+                    n_var = NULL, 
+                    mthd = "pls",
+                    mode = "rfe",
+                    seed_nbr = 11, 
+                    cv_nbr = 5,
+                    var_selection = "indv",
+                    filepath_tmp = NULL)
 ```
 
 Since some information related to the model and its performance is commonly

@@ -5,7 +5,7 @@
 \title{Train machine learning model}
 \usage{
 trainModelrfe(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric,
-  tune_length = NULL)
+  tune_length = NULL, rerank = FALSE)
 }
 \arguments{
 \item{NONE}{}

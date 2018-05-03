@@ -51,6 +51,11 @@ setMethod("gpm",
                 # x[,i] <- a * x[,i] + b
               }
             }
+            
+            #Create row index
+            x$rowID = seq(nrow(x))
+            meta$META = c(meta$META, "rowID")
+            
             data <- list(x)
             names(data) <- meta$TYPE
             meta <- list(meta)
