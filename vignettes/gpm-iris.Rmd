@@ -30,7 +30,7 @@ iris_gpm <- gpm(iris, meta)
 Once the gpm object has been created, it can be used as input for computing
 resamples and splitting the resamples into test and training datasets afterwards.
 ```{r}
-iris_gpm = createIndexFolds(x = iris_gpm, nbr = 1)
+iris_gpm = createIndexFolds(x = iris_gpm, nested_cv = FALSE)
 
 
 
@@ -42,6 +42,43 @@ iris_gpm <- resamplingsByVariable(x = iris_gpm,
 
 iris_gpm <- splitMultRespL(x = iris_gpm, 
                           p = 0.90)
+```
+
+```{r}
+iris$Plots = paste0(c("a", "b", "c", "d", "e"), sample(seq(30), nrow(iris), replace = TRUE))
+iris$SelCat = substr(iris$Plots, 1, 1)
+iris$SelNbr = as.numeric(substr(iris$Plots, 2, nchar(iris$Plots)))
+
+meta <- createGPMMeta(iris, type = "input",
+                      selector = which(names(iris) %in% c("SelCat", "SelNbr")), response = 5, 
+                      predictor = c(1:4), meta = NULL)
+iris_gpm <- gpm(iris, meta)
+
+iris_gpm = createIndexFolds(x = iris_gpm, nested_cv = FALSE)
+
+iris_gpm = trainModel(x = iris_gpm,
+                      metric = "Accuracy",
+                      n_var = NULL, 
+                      mthd = "pls",
+                      mode = "ffs",
+                      seed_nbr = 11, 
+                      cv_nbr = NULL,
+                      var_selection = "indv",
+                      filepath_tmp = NULL)
+
+iris_gpm = trainModel(x = iris_gpm,
+                    n_var = NULL, 
+                    mthd = "pls",
+                    mode = "rfe",
+                    seed_nbr = 11, 
+                    cv_nbr = 5,
+                    resample_nbr = c(1,2), 
+                    var_selection = "indv",
+                    filepath_tmp = NULL)
+
+
+iris_gpm@model$pls_ffs[[1]][[1]]$model$results
+iris_gpm@model$pls_ffs[[1]][[2]]$model
 ```
 
 Once the resampling has been defined, the model tuning and feature selection is

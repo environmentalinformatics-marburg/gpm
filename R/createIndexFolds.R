@@ -61,10 +61,11 @@ NULL
 #'
 setMethod("createIndexFolds", 
           signature(x = "GPM"), 
-          function(x, nbr = 1){
+          function(x, nested_cv = FALSE, nbr = 1){
             smr <- createIndexFolds(x = x@data$input, 
                                     response = x@meta$input$RESPONSE_FINAL,
                                     selector = x@meta$input$SELECTOR,
+                                    nested_cv = nested_cv,
                                     nbr = nbr)
             x@meta$input$TRAIN_TEST <- smr[[1]]
             x@meta$input$TRAIN_TEST_NSMPLS <- smr[[2]]
@@ -81,7 +82,7 @@ setMethod("createIndexFolds",
 #'
 setMethod("createIndexFolds", 
           signature(x = "data.frame"),
-          function(x, response, resamples, selector, nested_cv = TRUE, nbr = 1){
+          function(x, response, resamples, selector, nested_cv = FALSE, nbr = 1){
             
             responses <- lapply(response, function(r){
               if(nested_cv){

@@ -57,13 +57,13 @@ compIndexFolds = function(x, selector, nbr = 1){
   
   resamples = lapply(seq(min_idx, max_idx), function(c){
     
-    actsel = x[x[, snbr] == c, "rowID"]
-    # actsel = which(x[, snbr] == c)
+    # actsel = x[x[, snbr] == c, "rowID"]
+    actsel = which(x[, snbr] == c)
     misscat = unique(x[, scat][!x[, scat] %in% x[actsel, scat]])
     out_misscat = unlist(lapply(misscat, function(m){
       set.seed(c)
-      sample(x[x[, scat] == m, "rowID"], nbr)
-      # sample(which(x[, scat] == m), nbr)
+      # sample(x[x[, scat] == m, "rowID"], nbr)
+      sample(which(x[, scat] == m), nbr)
     }))
     testsmpls = c(actsel, out_misscat)
     trainsmpls = which(!seq(nrow(x)) %in% testsmpls)

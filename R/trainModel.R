@@ -84,7 +84,7 @@ setMethod("trainModel",
           signature(x = "GPM"), 
           function(x, n_var = NULL, 
                    mthd = "rf", mode = c("rfe", "ffs"),
-                   seed_nbr = 11, cv_nbr = 5,
+                   seed_nbr = 11, cv_nbr = NULL,
                    var_selection = c("sd", "indv"), 
                    metric = NULL, tune_length = NULL,
                    response_nbr = NULL, resample_nbr = NULL,
@@ -155,8 +155,8 @@ setMethod("trainModel",
                   
                   if(is.null(metric)){
                     if(class(resp) == "factor"){ 
-                      metric = "Accuracy"
-                      # metric = "Kappa"
+                      # metric = "Accuracy"
+                      metric = "Kappa"
                     } else {
                       metric = "RMSE"
                       # metric = "Rsquared"
@@ -200,12 +200,11 @@ setMethod("trainModel",
                     #                           mthd = mthd, seed_nbr = seed_nbr, 
                     #                           cv_nbr = cv_nbr, metric = metric, 
                     #                           withinSD = TRUE, ...))
+                    # cv_splits <- caret::createFolds(resp, k=cv_nbr, returnTrain = TRUE)
                     
-                    
-                    cv_splits <- caret::createFolds(resp, k=cv_nbr, returnTrain = TRUE)
-                    
-                    trCntr <- caret::trainControl(method="cv", number = cv_nbr, 
-                                                  index = cv_splits,
+                    trCntr <- caret::trainControl(method="cv",
+                                                  index = act_resample$training_index,
+                                                  indexOut = act_resample$training_indexOut,
                                                   returnResamp = "all",
                                                   repeats = 1, verbose = FALSE)
                     
@@ -220,12 +219,18 @@ setMethod("trainModel",
                   }
                   
                   train_selector <- x[act_resample$training$SAMPLES, selector]
-                  train_meta <- x[act_resample$training$SAMPLES, meta]
+                  if(length(meta) == 0){
+                    train_meta = NULL
+                  } else {
+                    train_meta <- x[act_resample$training$SAMPLES, meta]  
+                  }
                   training <- list(RESPONSE = resp, PREDICTOR = indp[, predictor_best],
                                    SELECTOR = train_selector, META = train_meta)
                   
                   if(inherits(model, "try-error")){
                     testing <- list(NA)
+                  } else if(is.null(act_resample$testing$SAMPLES)){
+                    testing <- list(NULL)
                   } else {
                     
                     test_resp <- x[act_resample$testing$SAMPLES, 
@@ -249,7 +254,11 @@ setMethod("trainModel",
                     }
                     
                     test_selector <- x[act_resample$testing$SAMPLES, selector]
-                    test_meta <- x[act_resample$testing$SAMPLES, meta]
+                    if(length(meta) == 0){
+                      test_meta = NULL
+                    } else {
+                      test_meta <- x[act_resample$testing$SAMPLES, meta]
+                    }
                     testing <-  list(RESPONSE = test_resp, PREDICTOR = test_indp,
                                      PREDICTED = test_pred, 
                                      SELECTOR = test_selector, META = test_meta)

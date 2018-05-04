@@ -25,8 +25,8 @@
 #'
 trainModelrfe <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric,
                           tune_length = NULL, rerank = FALSE){
-  set.seed(seed_nbr)
-  cv_splits <- caret::createFolds(resp, k=cv_nbr, returnTrain = TRUE)
+  # set.seed(seed_nbr)
+  # cv_splits <- caret::createFolds(resp, k=cv_nbr, returnTrain = TRUE)
   
   
   rfecntrl_functions <-  lut$MTHD_DEF_LST[[mthd]]$fncs
@@ -35,7 +35,9 @@ trainModelrfe <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric,
   }
   
   rfeCntrl <- caret::rfeControl(functions = rfecntrl_functions,
-                                method="cv", index = cv_splits,
+                                method="cv", 
+                                index = act_resample$training_index,
+                                indexOut = act_resample$training_indexOut,
                                 returnResamp = "all",
                                 verbose = FALSE,
                                 rerank=rerank)
