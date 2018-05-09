@@ -209,7 +209,8 @@ setMethod("trainModel",
                                                   repeats = 1, verbose = FALSE)
                     
                     
-                    model <- try(CAST::ffs(indp[, predictor_best], resp,  
+                    model <- try(CAST::ffs(predictors = indp[, predictor_best], 
+                                           response = resp,  
                                            metric = metric, method = mthd,
                                            trControl = trCntr,
                                            # tuneLength = tuneLength,

@@ -133,3 +133,29 @@ boxplot(kappa_int, tstat[[2]]$Kappa, (1-obb),
         sub=("20-fold sampling of iris data with a 50:50 training to test ratio."))
 ```
 
+```{r}
+mrg_tbl_gpm = readRDS("C:/Users/tnauss/permanent/plygrnd/insa/mrg_tbl_gpm_ffs_all_taxa.rds")
+responses = mrg_tbl_gpm@meta$input$RESPONSE_FINAL
+mrg_tbl_gpm@meta$input$RESPONSE_FINAL = responses[1]
+mrg_tbl_gpm@data$input = mrg_tbl_gpm@data$input[complete.cases(mrg_tbl_gpm@data$input[,mrg_tbl_gpm@meta$input$RESPONSE_FINAL]), ]
+mrg_tbl_gpm = createIndexFolds(x = mrg_tbl_gpm, nbr = 1) 
+
+mrg_tbl_gpm_ffs_model = trainModel(x = mrg_tbl_gpm,
+                                  metric = "Acurracy",
+                                  n_var = NULL,
+                                  mthd = "pls",
+                                  mode = "ffs",
+                                  seed_nbr = 11,
+                                  cv_nbr = 5,
+                                  var_selection = "indv") 
+
+
+response = mrg_tbl_gpm@meta$input$TRAIN_TEST[[1]][[1]]$training$RESPONSE
+index = mrg_tbl_gpm@meta$input$TRAIN_TEST[[1]][[1]]$training_index[[1]]
+indexOut = mrg_tbl_gpm@meta$input$TRAIN_TEST[[1]][[1]]$training_indexOut[[1]]
+mrg_tbl_gpm@data$input[index, response]
+class(mrg_tbl_gpm@data$input[index, response])
+summary(mrg_tbl_gpm@data$input[index, mrg_tbl_gpm@meta$input$PREDICTOR_FINAL])
+class(mrg_tbl_gpm@data$input[index, mrg_tbl_gpm@meta$input$PREDICTOR_FINAL])
+
+```
