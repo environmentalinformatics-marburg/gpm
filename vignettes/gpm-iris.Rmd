@@ -66,13 +66,13 @@ iris_gpm = trainModel(x = iris_gpm,
                       var_selection = "indv",
                       filepath_tmp = NULL)
 
+iris_gpm = createIndexFolds(x = iris_gpm, nested_cv = TRUE)
 iris_gpm = trainModel(x = iris_gpm,
                     n_var = NULL, 
                     mthd = "pls",
                     mode = "rfe",
                     seed_nbr = 11, 
                     cv_nbr = 5,
-                    resample_nbr = c(1,2), 
                     var_selection = "indv",
                     filepath_tmp = NULL)
 
@@ -141,7 +141,7 @@ mrg_tbl_gpm@data$input = mrg_tbl_gpm@data$input[complete.cases(mrg_tbl_gpm@data$
 mrg_tbl_gpm = createIndexFolds(x = mrg_tbl_gpm, nbr = 1) 
 
 mrg_tbl_gpm_ffs_model = trainModel(x = mrg_tbl_gpm,
-                                  metric = "Acurracy",
+                                  metric = "RMSE",
                                   n_var = NULL,
                                   mthd = "pls",
                                   mode = "ffs",
@@ -150,7 +150,7 @@ mrg_tbl_gpm_ffs_model = trainModel(x = mrg_tbl_gpm,
                                   var_selection = "indv") 
 
 
-response = mrg_tbl_gpm@meta$input$TRAIN_TEST[[1]][[1]]$training$RESPONSE
+9response = mrg_tbl_gpm@meta$input$TRAIN_TEST[[1]][[1]]$training$RESPONSE
 index = mrg_tbl_gpm@meta$input$TRAIN_TEST[[1]][[1]]$training_index[[1]]
 indexOut = mrg_tbl_gpm@meta$input$TRAIN_TEST[[1]][[1]]$training_indexOut[[1]]
 mrg_tbl_gpm@data$input[index, response]

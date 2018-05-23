@@ -166,6 +166,7 @@ setMethod("trainModel",
                   if(mode == "rfe"){
                     model <- try(trainModelrfe(resp = resp, indp = indp, n_var = n_var, 
                                                mthd = mthd, seed_nbr = seed_nbr, 
+                                               act_resample = act_resample,
                                                cv_nbr = cv_nbr, metric = metric,
                                                tune_length = tune_length,
                                                rerank = rerank))

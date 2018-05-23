@@ -23,8 +23,8 @@
 #' 
 #' @rdname trainModelrfe
 #'
-trainModelrfe <- function(resp, indp, n_var, mthd, seed_nbr, cv_nbr, metric,
-                          tune_length = NULL, rerank = FALSE){
+trainModelrfe <- function(resp, indp, n_var, mthd, seed_nbr, act_resample,
+                          cv_nbr, metric, tune_length = NULL, rerank = FALSE){
   # set.seed(seed_nbr)
   # cv_splits <- caret::createFolds(resp, k=cv_nbr, returnTrain = TRUE)
   
