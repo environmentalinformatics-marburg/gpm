@@ -214,7 +214,7 @@ setMethod("trainModel",
                                            response = resp,  
                                            metric = metric, method = mthd,
                                            trControl = trCntr,
-                                           tuneLength = tuneLength,
+                                           tuneLength = tune_length,
                                            tuneGrid = lut$MTHD_DEF_LST[[mthd]]$tunegr, ...))
                     
                     
