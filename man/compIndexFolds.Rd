@@ -5,13 +5,13 @@
 \title{Create testing and training folds for each response variable following a 
 grouping by index strategy.}
 \usage{
-compIndexFolds(df, selector, nbr = 1)
+compIndexFolds(x, selector, nbr = 1)
 }
 \arguments{
+\item{x}{An object of class gpm or data.frame}
+
 \item{selector}{The column name of the selector variable. Only 
 relevant if use_selector is TRUE.}
-
-\item{x}{An object of class gpm or data.frame}
 
 \item{response}{The column name(s) of the response variable(s)}
 

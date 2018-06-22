@@ -8,10 +8,10 @@
 \title{Create testing and training folds for each response variable following a 
 grouping by index strategy.}
 \usage{
-\S4method{createIndexFolds}{GPM}(x, nbr = 1)
+\S4method{createIndexFolds}{GPM}(x, nested_cv = FALSE, nbr = 1)
 
 \S4method{createIndexFolds}{data.frame}(x, response, resamples, selector,
-  nbr = 1)
+  nested_cv = FALSE, nbr = 1)
 }
 \arguments{
 \item{x}{An object of class gpm or data.frame}

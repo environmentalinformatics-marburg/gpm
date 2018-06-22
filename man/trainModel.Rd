@@ -8,7 +8,7 @@
 \title{Model training and performance using cross-validation}
 \usage{
 \S4method{trainModel}{GPM}(x, n_var = NULL, mthd = "rf", mode = c("rfe",
-  "ffs"), seed_nbr = 11, cv_nbr = 5, var_selection = c("sd", "indv"),
+  "ffs"), seed_nbr = 11, cv_nbr = NULL, var_selection = c("sd", "indv"),
   metric = NULL, tune_length = NULL, response_nbr = NULL,
   resample_nbr = NULL, filepath_tmp = NULL, rerank = FALSE, ...)
 
