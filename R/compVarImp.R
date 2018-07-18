@@ -10,7 +10,6 @@
 #' 
 #' @return A data frame containing the variable importance over for each
 #' response variable and all resamplings.
-#' 
 #' @name compVarImp
 #'
 #' @export compVarImp
