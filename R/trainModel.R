@@ -202,20 +202,31 @@ setMethod("trainModel",
                     #                           cv_nbr = cv_nbr, metric = metric, 
                     #                           withinSD = TRUE, ...))
                     # cv_splits <- caret::createFolds(resp, k=cv_nbr, returnTrain = TRUE)
-                    
+
                     trCntr <- caret::trainControl(method="cv",
                                                   index = act_resample$training_index,
                                                   indexOut = act_resample$training_indexOut,
                                                   returnResamp = "all",
                                                   repeats = 1, verbose = FALSE)
                     
+                    if(mthd == "rf"){
+                      model <- try(CAST::ffs(predictors = indp[, predictor_best], 
+                                             response = resp,  
+                                             metric = metric, method = mthd,
+                                             trControl = trCntr,
+                                             tuneLength = tune_length,
+                                             tuneGrid = lut$MTHD_DEF_LST[[mthd]]$tunegr, 
+                                             importance = TRUE, ...))
+                    } else {
+                      model <- try(CAST::ffs(predictors = indp[, predictor_best], 
+                                             response = resp,  
+                                             metric = metric, method = mthd,
+                                             trControl = trCntr,
+                                             tuneLength = tune_length,
+                                             tuneGrid = lut$MTHD_DEF_LST[[mthd]]$tunegr,
+                                             ...))
+                    }
                     
-                    model <- try(CAST::ffs(predictors = indp[, predictor_best], 
-                                           response = resp,  
-                                           metric = metric, method = mthd,
-                                           trControl = trCntr,
-                                           tuneLength = tune_length,
-                                           tuneGrid = lut$MTHD_DEF_LST[[mthd]]$tunegr, ...))
                     
                     
                   }
