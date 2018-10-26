@@ -86,7 +86,7 @@ setMethod("createFolds",
                 
                 cv = caret::createFolds(x[s$trainsmpls, which(colnames(x) == selector)], k = nbr)
                 training = list(SAMPLES = s$trainsmpls, RESPONSE = r)
-                training_index = lapply(cv, function(c){s$trainsmpls})
+                training_index = lapply(cv, function(c){s$trainsmpls[-c]})
                 training_indexOut = lapply(cv, function(c){c})
                 testing = list(SAMPLES = s$testsmpls, RESPONSE = r)
                 return(list(training = training, 
