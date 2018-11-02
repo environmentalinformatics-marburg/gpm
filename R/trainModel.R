@@ -83,7 +83,7 @@ NULL
 setMethod("trainModel", 
           signature(x = "GPM"), 
           function(x, n_var = NULL, 
-                   mthd = "rf", mode = c("rfe", "ffs"),
+                   mthd = "rf", mode = c("rfe", "ffs", "none"),
                    seed_nbr = 11, cv_nbr = NULL,
                    var_selection = c("sd", "indv"), 
                    metric = NULL, tune_length = NULL,
@@ -122,7 +122,7 @@ setMethod("trainModel",
           signature(x = "data.frame"),
           function(x, response, predictor, selector, meta, resamples,
                    n_var = NULL, mthd = "rf", 
-                   mode = c("rfe", "ffs"), seed_nbr = 11, 
+                   mode = c("rfe", "ffs", "none"), seed_nbr = 11, 
                    cv_nbr = 2, var_selection = c("sd", "indv"),
                    metric = NULL, tune_length = NULL,
                    response_nbr = NULL, resample_nbr = NULL, 
@@ -151,7 +151,14 @@ setMethod("trainModel",
                 if(!is.null(act_resample)){
                   resp <- x[act_resample$training$SAMPLES, 
                             act_resample$training$RESPONSE]
-                  indp <- x[act_resample$training$SAMPLES, predictor]
+                  
+                  if(length(predictor) == 1){
+                    indp = data.frame(tmp = x[act_resample$training$SAMPLES, predictor])
+                    colnames(indp) = predictor
+                  } else {
+                    indp <- x[act_resample$training$SAMPLES, predictor]  
+                  }
+                  
                   
                   if(is.null(metric)){
                     if(class(resp) == "factor"){ 
@@ -225,6 +232,39 @@ setMethod("trainModel",
                                              tuneLength = tune_length,
                                              tuneGrid = lut$MTHD_DEF_LST[[mthd]]$tunegr,
                                              ...))
+                    }
+                    
+                    
+                    
+                  }else if (mode == "none"){
+                    #model <- try(trainModelffs(resp = resp, indp = indp, n_var = n_var, 
+                    #                           mthd = mthd, seed_nbr = seed_nbr, 
+                    #                           cv_nbr = cv_nbr, metric = metric, 
+                    #                           withinSD = TRUE, ...))
+                    # cv_splits <- caret::createFolds(resp, k=cv_nbr, returnTrain = TRUE)
+                    
+                    trCntr <- caret::trainControl(method="cv",
+                                                  index = act_resample$training_index,
+                                                  indexOut = act_resample$training_indexOut,
+                                                  returnResamp = "all",
+                                                  repeats = 1, verbose = FALSE)
+                    
+                    if(mthd == "rf"){
+                      model <- try(caret::train(x = indp, 
+                                                y = resp,  
+                                                metric = metric, method = mthd,
+                                                trControl = trCntr,
+                                                tuneLength = tune_length,
+                                                tuneGrid = lut$MTHD_DEF_LST[[mthd]]$tunegr, 
+                                                importance = TRUE, ...))
+                    } else {
+                      model <- try(caret::train(x = indp, 
+                                                y = resp,  
+                                                metric = metric, method = mthd,
+                                                trControl = trCntr,
+                                                tuneLength = tune_length,
+                                                tuneGrid = lut$MTHD_DEF_LST[[mthd]]$tunegr, 
+                                                importance = TRUE, ...))
                     }
                     
                     
