@@ -34,7 +34,8 @@ pck_lut <- function(){
     gbm = list(fncs = caretFuncs,
                tunegr = expand.grid(.interaction.depth = seq(1, 7, 2),
                                     .n.trees = seq(100, 1000, 100),
-                                    .shrinkage = c(0.01, 0.1)),
+                                    .shrinkage = c(0.01, 0.1),
+                                    .n.minobsinnode = c(3,4,5)),
                type = "prob"),
     glm = list(fncs = lmFuncs,
                tunegr = NULL,
@@ -64,5 +65,5 @@ pck_lut <- function(){
   )
   
   lut <- list(MTHD_DEF_LST = mthd_def_lst)
-  devtools::use_data(lut, overwrite = TRUE, internal = TRUE)
+  usethis::use_data(lut, overwrite = TRUE, internal = TRUE)
 }

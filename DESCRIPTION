@@ -17,7 +17,8 @@ Depends:
     satellite,
     plyr,
     dplyr,
-    CAST
+    CAST,
+    R (>= 2.10)
 Imports:
     tools
 Suggests:
